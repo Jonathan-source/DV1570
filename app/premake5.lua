@@ -6,6 +6,9 @@ project "Application"
     language "C++"
     cppdialect "C++17"
     staticruntime "on"
+    --disablewarnings{"26812"}
+    --linkoptions { "-IGNORE:4075", "-IGNORE:4098", "-IGNORE:4099"}
+
     targetdir("%{wks.location}/build/bin/" .. outputdir .. "/%{prj.name}")
     objdir("%{wks.location}/build/bin-int/" .. outputdir .. "/%{prj.name}")
 
