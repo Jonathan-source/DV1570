@@ -1,6 +1,3 @@
-
-![image](https://user-images.githubusercontent.com/53872055/140231358-44062c9a-18b8-492f-9cea-9c555a86a9a3.png)
-
 # DV1570
 
 [![Download](https://img.shields.io/github/downloads/Jonathan-source/DV1570/total)]()
