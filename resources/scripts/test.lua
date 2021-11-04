@@ -1,7 +1,7 @@
 -----------------------------------------------
 -- A script to test the project setup of Lua.
 -----------------------------------------------
-global x = 42
+x = 42
 
 function Test() do
 	local y = 8
