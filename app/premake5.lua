@@ -6,6 +6,9 @@ project "Application"
     language "C++"
     cppdialect "C++17"
     staticruntime "on"
+    --disablewarnings{"26812"}
+    --linkoptions { "-IGNORE:4075", "-IGNORE:4098", "-IGNORE:4099"}
+
     targetdir("%{wks.location}/build/bin/" .. outputdir .. "/%{prj.name}")
     objdir("%{wks.location}/build/bin-int/" .. outputdir .. "/%{prj.name}")
 
@@ -45,13 +48,13 @@ project "Application"
      -- Define a macro/symbol which applies on a windows system.
     filter {"system:windows"}  
         defines {
-        "_WIN32",
-        "_CRT_SECURE_NO_WARNINGS",
+            "_WIN32",
+            "_CRT_SECURE_NO_WARNINGS",
         }
         -- Specifies shell commands to run after build is finished.
 	    postbuildcommands {
-	        "{COPY} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
-            "{COPY} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+	        "{COPYFILE} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+            "{COPYFILE} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
 		}
 
 
