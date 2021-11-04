@@ -74,8 +74,8 @@
     <PostBuildEvent>
       <Command>IF EXIST Irrlicht.dll\ (xcopy /Q /E /Y /I Irrlicht.dll $(SolutionDir)\app\build\bin\Debug-windows-x86_64\app &gt; nul) ELSE (xcopy /Q /Y /I Irrlicht.dll $(SolutionDir)\app\build\bin\Debug-windows-x86_64\app &gt; nul)
 IF EXIST lua54.dll\ (xcopy /Q /E /Y /I lua54.dll $(SolutionDir)\app\build\bin\Debug-windows-x86_64\app &gt; nul) ELSE (xcopy /Q /Y /I lua54.dll $(SolutionDir)\app\build\bin\Debug-windows-x86_64\app &gt; nul)
-IF EXIST $(SolutionDir)\resources\dlls\Irrlicht.dll\ (xcopy /Q /E /Y /I $(SolutionDir)\resources\dlls\Irrlicht.dll $(SolutionDir)\build\bin\Debug-windows-x86_64\Application &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)\resources\dlls\Irrlicht.dll $(SolutionDir)\build\bin\Debug-windows-x86_64\Application &gt; nul)
-IF EXIST $(SolutionDir)\resources\dlls\lua54.dll\ (xcopy /Q /E /Y /I $(SolutionDir)\resources\dlls\lua54.dll $(SolutionDir)\build\bin\Debug-windows-x86_64\Application &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)\resources\dlls\lua54.dll $(SolutionDir)\build\bin\Debug-windows-x86_64\Application &gt; nul)</Command>
+copy /B /Y $(SolutionDir)\resources\dlls\Irrlicht.dll $(SolutionDir)\build\bin\Debug-windows-x86_64\Application
+copy /B /Y $(SolutionDir)\resources\dlls\lua54.dll $(SolutionDir)\build\bin\Debug-windows-x86_64\Application</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -104,12 +104,14 @@ IF EXIST $(SolutionDir)\resources\dlls\lua54.dll\ (xcopy /Q /E /Y /I $(SolutionD
     <PostBuildEvent>
       <Command>IF EXIST Irrlicht.dll\ (xcopy /Q /E /Y /I Irrlicht.dll $(SolutionDir)\app\build\bin\Release-windows-x86_64\app &gt; nul) ELSE (xcopy /Q /Y /I Irrlicht.dll $(SolutionDir)\app\build\bin\Release-windows-x86_64\app &gt; nul)
 IF EXIST lua54.dll\ (xcopy /Q /E /Y /I lua54.dll $(SolutionDir)\app\build\bin\Release-windows-x86_64\app &gt; nul) ELSE (xcopy /Q /Y /I lua54.dll $(SolutionDir)\app\build\bin\Release-windows-x86_64\app &gt; nul)
-IF EXIST $(SolutionDir)\resources\dlls\Irrlicht.dll\ (xcopy /Q /E /Y /I $(SolutionDir)\resources\dlls\Irrlicht.dll $(SolutionDir)\build\bin\Release-windows-x86_64\Application &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)\resources\dlls\Irrlicht.dll $(SolutionDir)\build\bin\Release-windows-x86_64\Application &gt; nul)
-IF EXIST $(SolutionDir)\resources\dlls\lua54.dll\ (xcopy /Q /E /Y /I $(SolutionDir)\resources\dlls\lua54.dll $(SolutionDir)\build\bin\Release-windows-x86_64\Application &gt; nul) ELSE (xcopy /Q /Y /I $(SolutionDir)\resources\dlls\lua54.dll $(SolutionDir)\build\bin\Release-windows-x86_64\Application &gt; nul)</Command>
+copy /B /Y $(SolutionDir)\resources\dlls\Irrlicht.dll $(SolutionDir)\build\bin\Release-windows-x86_64\Application
+copy /B /Y $(SolutionDir)\resources\dlls\lua54.dll $(SolutionDir)\build\bin\Release-windows-x86_64\Application</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\Framework.h" />
+    <ClInclude Include="include\IScene.h" />
+    <ClInclude Include="include\MainMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp" />

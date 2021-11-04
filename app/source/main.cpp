@@ -1,5 +1,9 @@
 #include "Framework.h"
 
+#include "MainMenu.h"
+
+#define SafeDelete(x) if(x) { delete x; x = nullptr; }
+
 void TEST_LUA(lua_State* L)
 {
 	// Test 1.
@@ -47,6 +51,34 @@ void TEST_LUA(lua_State* L)
 }
 
 
+void UpdateGameState(const GameState &state, IScene * &scene)
+{
+	if(state != GameState::NO_CHANGE)
+	{
+		switch(state)
+		{
+		case GameState::MAIN_MENU:
+			{
+				SafeDelete(scene)
+				scene = new MainMenu;
+				scene->OnUserCreate();
+			}
+			break;
+		case GameState::PLAY_GAME:
+			
+			break;
+		case GameState::EXIT_GAME:
+			{
+				SafeDelete(scene)
+			}
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+
 int main()
 {
 	// Setup Lua.
@@ -55,7 +87,6 @@ int main()
 	std::thread conThread(ConsoleThread, L);
 
 	TEST_LUA(L);
-
 
 	// Setup Irrlicht. 
 	irr::SIrrlichtCreationParameters params;
@@ -73,11 +104,29 @@ int main()
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+
+	// Create a scene.
+	IScene* currentScene = nullptr;
+	GameState currentState = GameState::MAIN_MENU;
+
+
 	// Main loop.
 	while (device->run())
 	{
 		if (device->isWindowActive())
 		{
+			// Update GameState.
+			UpdateGameState(currentState, currentScene);
+
+			// Handle input from user.
+			if(currentScene != nullptr) 
+				currentScene->OnUserInput();
+
+			// Update logic in current scene.
+			if (currentScene != nullptr)
+				currentState = currentScene->OnUserUpdate();
+
+			// Render current scene.
 			driver->beginScene(true, true, irr::video::SColor(255, 90, 101, 140));
 			sceneManager->drawAll();
 			guienv->drawAll();

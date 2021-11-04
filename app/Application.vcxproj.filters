@@ -18,6 +18,12 @@
     <ClInclude Include="include\Framework.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="include\IScene.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MainMenu.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp">
