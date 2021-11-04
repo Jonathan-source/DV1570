@@ -1,6 +1,11 @@
 
 Test_Project/.vs/Lua_Irrlicht_BTH_template/v16/.suo
 Test_Project/.vs/Lua_Irrlicht_BTH_template/v16/.suo
+*.sln
+build/
+*.vcxproj.filters
+*.vcxproj
+*.vcxproj.user
 *.suo
 Bin/
 Obj/

@@ -53,8 +53,8 @@ project "Application"
         }
         -- Specifies shell commands to run after build is finished.
 	    postbuildcommands {
-	        "{COPYFILE} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
-            "{COPYFILE} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+	        --"{COPYFILE} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+            --"{COPYFILE} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
 		}
 
 
