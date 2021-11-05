@@ -18,6 +18,7 @@ project "Application"
         "%{wks.location}/app/include/**.h",
 		"%{wks.location}/app/source/**.cpp",
         "%{wks.location}/resources/scripts/**.lua",
+        "%{wks.location}/tests/**.h",
     }
 
 
@@ -26,6 +27,7 @@ project "Application"
         "%{wks.location}/app/source/",
         "%{wks.location}/app/include/",
 		"%{wks.location}/resources/scripts/",
+        "%{wks.location}/tests/",
 		"%{wks.location}/libs/irrlicht/lib/x64/",
 		"%{wks.location}/libs/irrlicht/include/",
 		"%{wks.location}/libs/lua542/include/",
@@ -36,6 +38,7 @@ project "Application"
         ["Headers/"] = { "**.h", "**.hpp" },
         ["Sources/"] = { "**.c", "**.cpp"},
         ["Scripts/"] = { "**.lua"},
+        ["Tests/"] = { "LuaTests.h"},
     }
 
 	links {
