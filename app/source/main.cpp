@@ -3,6 +3,8 @@
 #include "MainMenu.h"
 
 #define SafeDelete(x) if(x) { delete x; x = nullptr; }
+#include "StateMachine.h"
+#include "Player.h"
 
 void TEST_LUA(lua_State* L)
 {
@@ -108,7 +110,11 @@ int main()
 	// Create a scene.
 	IScene* currentScene = nullptr;
 	GameState currentState = GameState::MAIN_MENU;
+	// Add first scene.
+	Player player;
+	player.SetMesh(sceneManager->getMesh("Cube.fbx"));
 
+	auto meshSceneNode = sceneManager->addMeshSceneNode(player.GetMesh());
 
 	// Main loop.
 	while (device->run())
