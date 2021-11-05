@@ -14,12 +14,10 @@ public:
 
 	void OnEnter() override
 	{
-		std::cout << __FUNCTION__ << std::endl;
 		m_currentState = GameState::NO_CHANGE;
 	}
 	void OnUserInput(const EventHandler &eventHandler) override
 	{
-		std::cout << __FUNCTION__ << std::endl;
 
 		if (eventHandler.IsKeyDown(irr::KEY_KEY_G))
 			m_currentState = GameState::GAME;
@@ -36,13 +34,11 @@ public:
 	}
 	GameState OnUserUpdate() override
 	{
-		std::cout << __FUNCTION__ << std::endl;
 
 		return m_currentState;
 	}
 	void OnExit() override
 	{
-		std::cout << __FUNCTION__ << std::endl;
 	}
 
 

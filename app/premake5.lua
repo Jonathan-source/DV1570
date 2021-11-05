@@ -19,6 +19,8 @@ project "Application"
 		"%{wks.location}/app/source/**.cpp",
         "%{wks.location}/resources/scripts/**.lua",
         "%{wks.location}/tests/**.h",
+		"%{wks.location}/resources/texture/**.png",
+		"%{wks.location}/resources/mesh/**.obj",
     }
 
 

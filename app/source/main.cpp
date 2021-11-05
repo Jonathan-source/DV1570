@@ -43,7 +43,7 @@ int main()
 	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
 	Player player;
-	player.SetMesh(sceneManager->getMesh("Cube.fbx"));
+	player.SetMesh(sceneManager->getMesh("../resources/mesh/Cube.obj"));
 	
 	// Add scenes.
 	StateMachine sceneStateMachine;
