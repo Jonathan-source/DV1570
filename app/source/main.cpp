@@ -56,6 +56,10 @@ void TEST_LUA(lua_State* L)
 
 int main()
 {
+#ifdef _DEBUG
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
+
 	// Setup Lua.
 	lua_State * L = luaL_newstate();
 	luaL_openlibs(L);
@@ -108,7 +112,7 @@ int main()
 			device->yield();
 		}
 	}
-
+	
 	// Cleanup.
 	(void)device->drop();
 	conThread.join();
