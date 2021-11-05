@@ -1,8 +1,9 @@
+#include "EventHandler.h"
 #include "Framework.h"
-
 #include "MainMenu.h"
 
-#define SafeDelete(x) if(x) { delete x; x = nullptr; }
+#include "StateMachine.h"
+
 
 void TEST_LUA(lua_State* L)
 {
@@ -51,33 +52,6 @@ void TEST_LUA(lua_State* L)
 }
 
 
-void UpdateGameState(const GameState &state, IScene * &scene)
-{
-	if(state != GameState::NO_CHANGE)
-	{
-		switch(state)
-		{
-		case GameState::MAIN_MENU:
-			{
-				SafeDelete(scene)
-				scene = new MainMenu;
-				scene->OnUserCreate();
-			}
-			break;
-		case GameState::PLAY_GAME:
-			
-			break;
-		case GameState::EXIT_GAME:
-			{
-				SafeDelete(scene)
-			}
-			break;
-		default:
-			break;
-		}
-	}
-}
-
 
 int main()
 {
@@ -88,13 +62,15 @@ int main()
 
 	TEST_LUA(L);
 
-	// Setup Irrlicht. 
+	// Setup Irrlicht.
+	EventHandler eventHandler;
 	irr::SIrrlichtCreationParameters params;
 	params.DriverType = irr::video::EDT_SOFTWARE;
 	params.WindowSize = irr::core::dimension2d<irr::u32>(800, 600);
 	params.Fullscreen = false;
 	params.Vsync = false;
 	params.AntiAlias = 8;
+	params.EventReceiver = &eventHandler;
 	irr::IrrlichtDevice* device = irr::createDeviceEx(params);
 	if (!device)
 		return EXIT_FAILURE;
@@ -104,28 +80,16 @@ int main()
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+	// Add first scene.
 
-	// Create a scene.
-	IScene* currentScene = nullptr;
-	GameState currentState = GameState::MAIN_MENU;
-
-
+	
 	// Main loop.
 	while (device->run())
 	{
 		if (device->isWindowActive())
 		{
-			// Update GameState.
-			UpdateGameState(currentState, currentScene);
-
-			// Handle input from user.
-			if(currentScene != nullptr) 
-				currentScene->OnUserInput();
-
-			// Update logic in current scene.
-			if (currentScene != nullptr)
-				currentState = currentScene->OnUserUpdate();
-
+			// Update current scene.
+			
 			// Render current scene.
 			driver->beginScene(true, true, irr::video::SColor(255, 90, 101, 140));
 			sceneManager->drawAll();

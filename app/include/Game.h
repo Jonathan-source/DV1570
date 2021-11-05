@@ -1,32 +1,27 @@
 #pragma once
-#include <IGUIButton.h>
+
 #include <iostream>
 
-#include "EventHandler.h"
 #include "GameStates.h"
 #include "StateMachine.h"
 
-class MainMenu : public IState
+class Game : public IState
 {
 public:
-	MainMenu() = default;
-	virtual ~MainMenu() = default;
+	Game() = default;
+	virtual ~Game() = default;
 
 	void OnEnter() override
 	{
 		std::cout << __FUNCTION__ << std::endl;
 		m_currentState = GameState::NO_CHANGE;
 	}
-	void OnUserInput(const EventHandler &eventHandler) override
+	void OnUserInput(const EventHandler& eventHandler) override
 	{
 		std::cout << __FUNCTION__ << std::endl;
 
-		if (eventHandler.IsKeyDown(irr::KEY_KEY_W))
-			m_currentState = GameState::ENTER_GAME;
-
-		else if (eventHandler.IsKeyDown(irr::KEY_KEY_S))
+		if (eventHandler.IsKeyDown(irr::KEY_KEY_S))
 			m_currentState = GameState::EXIT;
-
 	}
 	void OnUserUpdate() override
 	{
@@ -37,7 +32,6 @@ public:
 	{
 		
 	}
-
 
 private:
 	GameState m_currentState;
