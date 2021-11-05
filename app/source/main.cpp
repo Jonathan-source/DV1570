@@ -1,5 +1,6 @@
 #include "EventHandler.h"
 #include "Framework.h"
+#include "Game.h"
 #include "MainMenu.h"
 
 #include "StateMachine.h"
@@ -80,16 +81,22 @@ int main()
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-	// Add first scene.
+	// Add scenes.
+	StateMachine sceneStateMachine;
+	sceneStateMachine.Add("main_menu", new MainMenu());
+	sceneStateMachine.Add("game", new Game());
+	// Set initial scene.
+	sceneStateMachine.Change("main_menu");
 
-	
 	// Main loop.
-	while (device->run())
+	bool isRunning = true;
+	while (device->run() && isRunning)
 	{
 		if (device->isWindowActive())
 		{
 			// Update current scene.
-			
+			isRunning = sceneStateMachine.Update(eventHandler);
+
 			// Render current scene.
 			driver->beginScene(true, true, irr::video::SColor(255, 90, 101, 140));
 			sceneManager->drawAll();
@@ -106,6 +113,5 @@ int main()
 	(void)device->drop();
 	conThread.join();
 	lua_close(L);
-
 	return EXIT_SUCCESS;
 }

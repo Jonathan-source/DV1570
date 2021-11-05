@@ -12,7 +12,7 @@ class IState
 public:
 	virtual ~IState() = default;
 	virtual void OnEnter() = 0;
-	virtual void OnUserUpdate() = 0;
+	virtual GameState OnUserUpdate() = 0;
 	virtual void OnUserInput(const EventHandler& eventHandler) = 0;
 	virtual void OnExit() = 0;
 };
@@ -23,7 +23,7 @@ public:
 	EmptyState() = default;
 	virtual ~EmptyState() = default;
 	void OnEnter() override {}
-	void OnUserUpdate() override {}
+	GameState OnUserUpdate() override { return GameState::NO_CHANGE; }
 	void OnUserInput(const EventHandler& eventHandler) override {}
 	void OnExit() override {}
 };
@@ -40,18 +40,20 @@ public:
 	void Clear();
 
 	void Change(const std::string &id);
-	void Update(const EventHandler& eventHandler);
+	bool Update(const EventHandler& eventHandler);
 
 private:
 	std::unordered_map<std::string, IState*> m_states;
 	std::unordered_map<std::string, IState*>::iterator m_it;
-	IState * m_current = new EmptyState();
+	IState * m_current;
 
 };
 
 inline StateMachine::StateMachine()
 {
-
+	Add("empty_state", new EmptyState());
+	m_current = m_states["empty_state"];
+	Current()->OnEnter();
 }
 
 inline IState* StateMachine::Current() const
@@ -86,12 +88,34 @@ inline void StateMachine::Change(const std::string& id)
 	m_current = next;
 }
 
-inline void StateMachine::Update(const EventHandler& eventHandler)
+inline bool StateMachine::Update(const EventHandler& eventHandler)
 {
+	bool status = true;
 	m_current->OnUserInput(eventHandler);
-	m_current->OnUserUpdate();
+	const GameState state = m_current->OnUserUpdate();
+	if(state != GameState::NO_CHANGE)
+	{
+		switch(state)
+		{
+		case GameState::GAME:
+			Change("game");
+			break;
+		case GameState::MENU:
+			Change("main_menu");
+			break;
+		case GameState::EXIT:
+			Change("empty_state");
+			//status = false;
+			break;
+		default:
+			break;
+		}
+	}
+
+	return status;
 }
 
 inline StateMachine::~StateMachine()
 {
+	Clear();
 }

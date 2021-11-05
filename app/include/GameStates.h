@@ -1,10 +1,11 @@
 #pragma once
 
+// Also make change in StateMachine::Update().
 enum class GameState
 {
 	NO_CHANGE,
-	ENTER_MENU,
-	ENTER_GAME,
-	ENTER_PAUSE,
+	MENU,
+	GAME,
+	PAUSE,
 	EXIT,
 };

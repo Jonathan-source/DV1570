@@ -21,16 +21,17 @@ public:
 		std::cout << __FUNCTION__ << std::endl;
 
 		if (eventHandler.IsKeyDown(irr::KEY_KEY_S))
-			m_currentState = GameState::EXIT;
+			m_currentState = GameState::MENU;
 	}
-	void OnUserUpdate() override
+	GameState OnUserUpdate() override
 	{
 		std::cout << __FUNCTION__ << std::endl;
 
+		return m_currentState;
 	}
 	void OnExit() override
 	{
-		
+		std::cout << __FUNCTION__ << std::endl;
 	}
 
 private:
