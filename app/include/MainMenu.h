@@ -21,8 +21,14 @@ public:
 	{
 		std::cout << __FUNCTION__ << std::endl;
 
-		if (eventHandler.IsKeyDown(irr::KEY_KEY_A))
+		if (eventHandler.IsKeyDown(irr::KEY_KEY_G))
 			m_currentState = GameState::GAME;
+
+		else if (eventHandler.IsKeyDown(irr::KEY_KEY_H))
+			m_currentState = GameState::HIGHSCORE;
+
+		else if (eventHandler.IsKeyDown(irr::KEY_KEY_E))
+			m_currentState = GameState::EDITOR;
 
 		else if (eventHandler.IsKeyDown(irr::KEY_KEY_Q))
 			m_currentState = GameState::EXIT;

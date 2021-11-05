@@ -1,15 +1,17 @@
 #pragma once
 
+#pragma once
+
 #include <iostream>
 
 #include "GameStates.h"
 #include "StateMachine.h"
 
-class Game : public IState
+class Editor : public IState
 {
 public:
-	Game() = default;
-	virtual ~Game() = default;
+	Editor() = default;
+	virtual ~Editor() = default;
 
 	void OnEnter() override
 	{

@@ -1,7 +1,10 @@
-#include "EventHandler.h"
 #include "Framework.h"
+#include "EventHandler.h"
+
 #include "Game.h"
+#include "Highscore.h"
 #include "MainMenu.h"
+#include "Editor.h"
 
 #include "StateMachine.h"
 
@@ -89,6 +92,9 @@ int main()
 	StateMachine sceneStateMachine;
 	sceneStateMachine.Add("main_menu", new MainMenu());
 	sceneStateMachine.Add("game", new Game());
+	sceneStateMachine.Add("highscore", new Highscore());
+	sceneStateMachine.Add("editor", new Editor());
+
 	// Set initial scene.
 	sceneStateMachine.Change("main_menu");
 
@@ -112,10 +118,13 @@ int main()
 			device->yield();
 		}
 	}
+
 	
 	// Cleanup.
 	(void)device->drop();
 	conThread.join();
 	lua_close(L);
+
+	//PostMessage(GetConsoleWindow(), WM_CLOSE, 0, 0);
 	return EXIT_SUCCESS;
 }

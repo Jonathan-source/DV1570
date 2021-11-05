@@ -6,6 +6,7 @@
 #include <unordered_map>
 
 #include "EventHandler.h"
+#include "GameStates.h"
 
 class IState
 {
@@ -97,15 +98,23 @@ inline bool StateMachine::Update(const EventHandler& eventHandler)
 	{
 		switch(state)
 		{
-		case GameState::GAME:
-			Change("game");
-			break;
 		case GameState::MENU:
 			Change("main_menu");
 			break;
-		case GameState::EXIT:
+		case GameState::GAME:
+			Change("game");
+			break;
+		case GameState::PAUSE:
 			Change("empty_state");
-			//status = false;
+			break;
+		case GameState::HIGHSCORE:
+			Change("highscore");
+			break;
+		case GameState::EDITOR:
+			Change("editor");
+			break;
+		case GameState::EXIT:
+			status = false;
 			break;
 		default:
 			break;
