@@ -19,9 +19,12 @@ void MainMenu::OnUserInput(const EventHandler& eventHandler)
 {
 	if(m_playButton->isPressed())
 		m_currentState = GameState::GAME;
+	else if (m_editorButton->isPressed())
+		m_currentState = GameState::EDITOR;
+	else if (m_highScoreButton->isPressed())
+		m_currentState = GameState::HIGHSCORE;
 	else if(m_exitButton->isPressed())
 		m_currentState = GameState::EXIT;
-	
 }
 
 GameState MainMenu::OnUserUpdate()
@@ -32,8 +35,8 @@ GameState MainMenu::OnUserUpdate()
 void MainMenu::OnExit()
 {
 	m_playButton->remove();
-	m_EditorButton->remove();
-	m_HighScoreButton->remove();
+	m_editorButton->remove();
+	m_highScoreButton->remove();
 	m_exitButton->remove();
 }
 
@@ -56,10 +59,10 @@ void MainMenu::InitButtons()
 	m_playButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textPlay);
 	currentYPos += offsetY;
 	//Editor button
-	m_EditorButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textEditor);
+	m_editorButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textEditor);
 	currentYPos += offsetY;
 	//High score button
-	m_HighScoreButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textHighScore);
+	m_highScoreButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textHighScore);
 	currentYPos += offsetY;
 	//Exit button
 	m_exitButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textExit);

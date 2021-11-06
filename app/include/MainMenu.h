@@ -30,7 +30,7 @@ private:
 	
 	//Menu buttons
 	irr::gui::IGUIButton* m_playButton;
-	irr::gui::IGUIButton* m_EditorButton;
-	irr::gui::IGUIButton* m_HighScoreButton;
+	irr::gui::IGUIButton* m_editorButton;
+	irr::gui::IGUIButton* m_highScoreButton;
 	irr::gui::IGUIButton* m_exitButton;
 };
