@@ -23,9 +23,8 @@ void Game::OnEnter()
 	camera->setPosition(irr::core::vector3df(0, 0, 5));
 	camera->setTarget(irr::core::vector3df(0, 0, 0));
 
-	//add player to the nodes
+	//Set players mesh node
 	m_player.SetMeshSceneNode(sceneManager->addMeshSceneNode(m_player.GetMesh()));
-	//m_meshSceneNodes.emplace_back(m_player.GetMeshSceneNode());
 	
 	m_currentState = GameState::NO_CHANGE;
 }
