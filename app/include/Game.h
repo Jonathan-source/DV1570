@@ -4,37 +4,27 @@
 
 #include "GameStates.h"
 #include "StateMachine.h"
+#include "Player.h"
 
 class Game : public IState
 {
 public:
-	Game() = default;
+	Game(irr::IrrlichtDevice* device);
 	virtual ~Game() = default;
 
-	void OnEnter() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-		m_currentState = GameState::NO_CHANGE;
-	}
-	void OnUserInput(const EventHandler& eventHandler) override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-
-		if (eventHandler.IsKeyDown(irr::KEY_KEY_M))
-			m_currentState = GameState::MENU;
-	}
-	GameState OnUserUpdate() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-
-		return m_currentState;
-	}
-	void OnExit() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-	}
+	void OnEnter() override;
+	void OnUserInput(const EventHandler& eventHandler) override;	
+	GameState OnUserUpdate() override;
+	void OnExit() override;
 
 private:
+	irr::IrrlichtDevice* device;
 	GameState m_currentState;
+	Player m_player;
+	irr::scene::ICameraSceneNode* m_camera;
 
+	//Timer
+	u32 then;
+	u32 now;
+	f32 frameDeltaTime;
 };

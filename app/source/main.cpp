@@ -1,6 +1,6 @@
 #include "Framework.h"
 #include "LuaTests.h"
-
+#include "Player.h"
 #include "EventHandler.h"
 
 #include "Game.h"
@@ -23,13 +23,15 @@ int main()
 
 	std::thread conThread(ConsoleThread, L);
 
-	LUA_TESTS(L);
+	// Test some Lua code.
+	LUA_TESTS::TEST_1(L);
+
 
 	// Setup Irrlicht.
 	EventHandler eventHandler;
 	irr::SIrrlichtCreationParameters params;
 	params.DriverType = irr::video::EDT_SOFTWARE;
-	params.WindowSize = irr::core::dimension2d<irr::u32>(800, 600);
+	params.WindowSize = irr::core::dimension2d<irr::u32>(1920, 1080);
 	params.Fullscreen = false;
 	params.Vsync = false;
 	params.AntiAlias = 8;
@@ -43,18 +45,18 @@ int main()
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+
 	// Add scenes.
 	StateMachine sceneStateMachine;
 	{
 		// Use: M, G, E, H, Q to switch between current scenes.
-		sceneStateMachine.Add("main_menu", new MainMenu());
-		sceneStateMachine.Add("game", new Game());
+		sceneStateMachine.Add("main_menu", new MainMenu(device));
+		sceneStateMachine.Add("game", new Game(device));
 		sceneStateMachine.Add("highscore", new Highscore());
 		sceneStateMachine.Add("editor", new Editor());
 		// Set initial scene.
 		sceneStateMachine.Change("main_menu");
 	}
-
 
 	// Main loop.
 	bool isRunning = true;

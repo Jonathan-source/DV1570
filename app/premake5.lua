@@ -19,6 +19,8 @@ project "Application"
 		"%{wks.location}/app/source/**.cpp",
         "%{wks.location}/resources/scripts/**.lua",
         "%{wks.location}/tests/**.h",
+		"%{wks.location}/resources/texture/**.png",
+		"%{wks.location}/resources/mesh/**.obj",
     }
 
 
@@ -27,6 +29,8 @@ project "Application"
         "%{wks.location}/app/source/",
         "%{wks.location}/app/include/",
 		"%{wks.location}/resources/scripts/",
+		"%{wks.location}/resources/texture/",
+		"%{wks.location}/resources/mesh/",
         "%{wks.location}/tests/",
 		"%{wks.location}/libs/irrlicht/lib/x64/",
 		"%{wks.location}/libs/irrlicht/include/",
@@ -38,7 +42,7 @@ project "Application"
         ["Headers/"] = { "**.h", "**.hpp" },
         ["Sources/"] = { "**.c", "**.cpp"},
         ["Scripts/"] = { "**.lua"},
-        ["Tests/"] = { "LuaTests.h"},
+        ["Tests/"] = { "LuaTests.h", "LuaTests.cpp"},
     }
 
 	links {
@@ -56,8 +60,8 @@ project "Application"
         }
         -- Specifies shell commands to run after build is finished.
 	    postbuildcommands {
-	        --"{COPYFILE} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
-            --"{COPYFILE} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+	        "{COPYFILE} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+            "{COPYFILE} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
 		}
 
 

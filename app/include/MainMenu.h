@@ -9,44 +9,28 @@
 class MainMenu : public IState
 {
 public:
-	MainMenu() = default;
+	MainMenu(irr::IrrlichtDevice* device);
 	virtual ~MainMenu() = default;
 
-	void OnEnter() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-		m_currentState = GameState::NO_CHANGE;
-	}
-	void OnUserInput(const EventHandler &eventHandler) override
-	{
-		std::cout << __FUNCTION__ << std::endl;
+	void OnEnter() override;
+	void OnUserInput(const EventHandler& eventHandler) override;
+	GameState OnUserUpdate() override;
+	void OnExit() override;
 
-		if (eventHandler.IsKeyDown(irr::KEY_KEY_G))
-			m_currentState = GameState::GAME;
-
-		else if (eventHandler.IsKeyDown(irr::KEY_KEY_H))
-			m_currentState = GameState::HIGHSCORE;
-
-		else if (eventHandler.IsKeyDown(irr::KEY_KEY_E))
-			m_currentState = GameState::EDITOR;
-
-		else if (eventHandler.IsKeyDown(irr::KEY_KEY_Q))
-			m_currentState = GameState::EXIT;
-
-	}
-	GameState OnUserUpdate() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-
-		return m_currentState;
-	}
-	void OnExit() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-	}
-
-
+	//Initialize all buttons for menu
+	void InitButtons();
+	
 private:
 	GameState m_currentState;
-
+	
+	int m_windowWidth;
+	int m_windowHeight;
+	
+	irr::IrrlichtDevice* device;
+	
+	//Menu buttons
+	irr::gui::IGUIButton* m_playButton;
+	irr::gui::IGUIButton* m_editorButton;
+	irr::gui::IGUIButton* m_highScoreButton;
+	irr::gui::IGUIButton* m_exitButton;
 };
