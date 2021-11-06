@@ -22,7 +22,9 @@ int main()
 	luaL_openlibs(L);
 	std::thread conThread(ConsoleThread, L);
 
-	LUA_TESTS(L);
+	// Test some Lua code.
+	LUA_TESTS::TEST_1(L);
+
 
 	// Setup Irrlicht.
 	EventHandler eventHandler;

@@ -42,7 +42,7 @@ project "Application"
         ["Headers/"] = { "**.h", "**.hpp" },
         ["Sources/"] = { "**.c", "**.cpp"},
         ["Scripts/"] = { "**.lua"},
-        ["Tests/"] = { "LuaTests.h"},
+        ["Tests/"] = { "LuaTests.h", "LuaTests.cpp"},
     }
 
 	links {
