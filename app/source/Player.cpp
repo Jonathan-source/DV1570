@@ -42,3 +42,13 @@ void Player::SetRunSpeed(float runSpeed)
 {
 	this->m_runSpeed = runSpeed;
 }
+
+irr::core::vector3d<float> Player::GetVelocity() const
+{
+	return velocity;
+}
+
+void Player::SetVelocity(const irr::core::vector3d<float>& velocity)
+{
+	this->velocity = velocity;
+}

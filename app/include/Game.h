@@ -13,6 +13,7 @@ public:
 	virtual ~Game() = default;
 
 	void OnEnter() override;
+	void PlayerInput(const EventHandler& eventHandler);
 	void OnUserInput(const EventHandler& eventHandler) override;	
 	GameState OnUserUpdate() override;
 	void OnExit() override;
@@ -23,4 +24,9 @@ private:
 	Player m_player;
 	irr::scene::ICameraSceneNode* m_camera;
 	std::vector<irr::scene::IMeshSceneNode*> m_meshSceneNodes;
+
+	//Timer
+	u32 then;
+	u32 now;
+	f32 frameDeltaTime;
 };

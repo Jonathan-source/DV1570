@@ -6,6 +6,7 @@ MainMenu::MainMenu(irr::IrrlichtDevice* device)
 {
 	m_windowWidth = device->getVideoDriver()->getScreenSize().Width;
 	m_windowHeight = device->getVideoDriver()->getScreenSize().Height;
+	
 }
 
 void MainMenu::OnEnter()

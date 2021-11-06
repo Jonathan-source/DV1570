@@ -29,5 +29,9 @@ private:
 	int m_health;
 	int m_attackDmg;
 	float m_runSpeed;
+	irr::core::vector3d<float> velocity;
+public:
+	irr::core::vector3d<float> GetVelocity() const;
+	void SetVelocity(const irr::core::vector3d<float>& velocity);
 };
 
