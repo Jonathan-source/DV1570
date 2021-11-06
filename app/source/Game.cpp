@@ -8,7 +8,7 @@ Game::Game(irr::IrrlichtDevice* device)
 	m_player.SetRunSpeed(10);
 	m_player.SetHealth(100);
 	m_player.SetRunSpeed(10.f);
-	m_player.SetMesh(sceneManager->getMesh("../resources/mesh/Cube.obj"));
+	m_player.SetMesh(sceneManager->getMesh("../resources/meshes/cube.obj"));
 }
 
 void Game::OnEnter()

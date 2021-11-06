@@ -22,7 +22,7 @@ public:
 	{
 		std::cout << __FUNCTION__ << std::endl;
 
-		if (eventHandler.IsKeyDown(irr::KEY_KEY_M))
+		if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
 			m_currentState = GameState::MENU;
 	}
 	GameState OnUserUpdate() override
