@@ -42,8 +42,14 @@ int main()
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
+	//Player
 	Player player;
 	player.SetMesh(sceneManager->getMesh("../resources/mesh/Cube.obj"));
+	//Camera
+	irr::scene::ICameraSceneNode* camera = sceneManager->addCameraSceneNode();
+	camera->setPosition(irr::core::vector3df(0, 0, 5));
+	camera->setTarget(irr::core::vector3df(0, 0, 0));
+
 	
 	// Add scenes.
 	StateMachine sceneStateMachine;
