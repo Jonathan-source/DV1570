@@ -20,9 +20,9 @@ void Game::OnEnter()
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	
 	//Camera
-	irr::scene::ICameraSceneNode* camera = sceneManager->addCameraSceneNode();
-	camera->setPosition(irr::core::vector3df(0, 0, 5));
-	camera->setTarget(irr::core::vector3df(0, 0, 0));
+	m_camera = sceneManager->addCameraSceneNode();
+	m_camera->setPosition(irr::core::vector3df(m_player.GetPosition().X, m_player.GetPosition().Y + 8, m_player.GetPosition().Z + 8));
+	m_camera->setTarget(irr::core::vector3df(m_player.GetPosition().X, m_player.GetPosition().Y, m_player.GetPosition().Z));
 
 	//Set players mesh node
 	m_player.SetMeshSceneNode(sceneManager->addMeshSceneNode(m_player.GetMesh()));
@@ -43,8 +43,13 @@ GameState Game::OnUserUpdate()
 	now = device->getTimer()->getTime();
 	frameDeltaTime = static_cast<f32>(now - then) / 1000.f; //time in seconds
 
+	// Update Player.
 	m_player.Move(m_player.GetVelocity(), frameDeltaTime, m_player.GetRunSpeed());
-	
+
+	// Update Camera.
+	//m_camera->setPosition(irr::core::vector3df(m_player.GetPosition().X, m_player.GetPosition().Y + 8, m_player.GetPosition().Z + 8));
+	//m_camera->setTarget(irr::core::vector3df(m_player.GetPosition().X, m_player.GetPosition().Y, m_player.GetPosition().Z));
+
 	then = now;
 	return m_currentState;
 }
@@ -54,6 +59,7 @@ void Game::OnExit()
 	std::cout << __FUNCTION__ << std::endl;
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	m_player.SetMeshSceneNode(nullptr);
+	m_camera->remove();
 	sceneManager->clear();
 
 }

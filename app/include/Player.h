@@ -18,7 +18,7 @@ public:
 	[[nodiscard]] int GetHealth() const;
 	[[nodiscard]] int GetAttackDamage() const;
 	[[nodiscard]] float GetRunSpeed() const;
-	
+
 	//Setters
 	void SetHealth(int health);
 	void SetAttackDamage(int attdmg);
