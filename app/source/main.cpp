@@ -20,6 +20,7 @@ int main()
 	// Setup Lua.
 	lua_State * L = luaL_newstate();
 	luaL_openlibs(L);
+
 	std::thread conThread(ConsoleThread, L);
 
 	LUA_TESTS(L);
@@ -75,13 +76,12 @@ int main()
 			device->yield();
 		}
 	}
-
 	
 	// Cleanup.
-	(void)device->drop();
-	conThread.join();
-	lua_close(L);
+	device->closeDevice();								// Close Irrlicht.
+	PostMessage(GetConsoleWindow(), WM_CLOSE, 0, 0);	// Close Console Window.		
+	lua_close(L);										// Close Lua.
+	conThread.join();									// Join Console Thread.
 
-	//PostMessage(GetConsoleWindow(), WM_CLOSE, 0, 0);
 	return EXIT_SUCCESS;
 }
