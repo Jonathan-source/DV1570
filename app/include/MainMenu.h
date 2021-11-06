@@ -9,7 +9,7 @@
 class MainMenu : public IState
 {
 public:
-	MainMenu(irr::IrrlichtDevice* device, int width, int height);
+	MainMenu(irr::IrrlichtDevice* device);
 	virtual ~MainMenu() = default;
 
 	void OnEnter() override;
@@ -17,9 +17,16 @@ public:
 	GameState OnUserUpdate() override;
 	void OnExit() override;
 
-
+	//Initialize all buttons for menu
+	void InitButtons();
+	
 private:
 	GameState m_currentState;
+	
+	int m_windowWidth;
+	int m_windowHeight;
+	
+	irr::IrrlichtDevice* device;
 	
 	//Menu buttons
 	irr::gui::IGUIButton* m_playButton;

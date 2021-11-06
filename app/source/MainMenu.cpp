@@ -1,52 +1,26 @@
 #include "MainMenu.h"
 
-MainMenu::MainMenu(irr::IrrlichtDevice* device, int width, int height)
+MainMenu::MainMenu(irr::IrrlichtDevice* device)
+	:device(device)
+
 {
-	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
-
-	int offsetX = (width / 4);
-	int offsetY = (height / 8);
-	int centerX = (width / 2);
-	int currentYPos = offsetY;
-	int padding = 10;
-	
-	wchar_t textPlay[] = L"Play";
-	wchar_t textEditor[] = L"Editor";
-	wchar_t textHighScore[] = L"High Score";
-	wchar_t textExit[] = L"Exit";
-
-	//Play button
-	m_playButton =      guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textPlay);
-	currentYPos += offsetY;
-	//Editor button
-	m_EditorButton =    guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textEditor);
-	currentYPos += offsetY;
-	//High score button
-	m_HighScoreButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textHighScore);
-	currentYPos += offsetY;
-	//Exit button
-	m_exitButton =      guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textExit);
-
+	m_windowWidth = device->getVideoDriver()->getScreenSize().Width;
+	m_windowHeight = device->getVideoDriver()->getScreenSize().Height;
 }
 
 void MainMenu::OnEnter()
 {
+	InitButtons();
 	m_currentState = GameState::NO_CHANGE;
 }
 
 void MainMenu::OnUserInput(const EventHandler& eventHandler)
 {
-	if (eventHandler.IsKeyDown(irr::KEY_KEY_G))
+	if(m_playButton->isPressed())
 		m_currentState = GameState::GAME;
-
-	else if (eventHandler.IsKeyDown(irr::KEY_KEY_H))
-		m_currentState = GameState::HIGHSCORE;
-
-	else if (eventHandler.IsKeyDown(irr::KEY_KEY_E))
-		m_currentState = GameState::EDITOR;
-
-	else if (eventHandler.IsKeyDown(irr::KEY_KEY_Q))
+	else if(m_exitButton->isPressed())
 		m_currentState = GameState::EXIT;
+	
 }
 
 GameState MainMenu::OnUserUpdate()
@@ -56,4 +30,36 @@ GameState MainMenu::OnUserUpdate()
 
 void MainMenu::OnExit()
 {
+	m_playButton->remove();
+	m_EditorButton->remove();
+	m_HighScoreButton->remove();
+	m_exitButton->remove();
+}
+
+void MainMenu::InitButtons()
+{
+	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
+
+	int offsetX = (m_windowWidth / 4);
+	int offsetY = (m_windowHeight / 8);
+	int centerX = (m_windowWidth / 2);
+	int currentYPos = offsetY;
+	int padding = 10;
+
+	wchar_t textPlay[] = L"Play";
+	wchar_t textEditor[] = L"Editor";
+	wchar_t textHighScore[] = L"High Score";
+	wchar_t textExit[] = L"Exit";
+
+	//Play button
+	m_playButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textPlay);
+	currentYPos += offsetY;
+	//Editor button
+	m_EditorButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textEditor);
+	currentYPos += offsetY;
+	//High score button
+	m_HighScoreButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textHighScore);
+	currentYPos += offsetY;
+	//Exit button
+	m_exitButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textExit);
 }

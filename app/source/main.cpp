@@ -28,7 +28,7 @@ int main()
 	EventHandler eventHandler;
 	irr::SIrrlichtCreationParameters params;
 	params.DriverType = irr::video::EDT_SOFTWARE;
-	params.WindowSize = irr::core::dimension2d<irr::u32>(800, 800);
+	params.WindowSize = irr::core::dimension2d<irr::u32>(1920, 1080);
 	params.Fullscreen = false;
 	params.Vsync = false;
 	params.AntiAlias = 8;
@@ -42,28 +42,18 @@ int main()
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
 
-	//Player
-	Player player;
-	player.SetMesh(sceneManager->getMesh("../resources/mesh/Cube.obj"));
-	//Camera
-	irr::scene::ICameraSceneNode* camera = sceneManager->addCameraSceneNode();
-	camera->setPosition(irr::core::vector3df(0, 0, 5));
-	camera->setTarget(irr::core::vector3df(0, 0, 0));
 
-	
 	// Add scenes.
 	StateMachine sceneStateMachine;
 	{
 		// Use: M, G, E, H, Q to switch between current scenes.
-		sceneStateMachine.Add("main_menu", new MainMenu(device, params.WindowSize.Width, params.WindowSize.Height));
-		sceneStateMachine.Add("game", new Game());
+		sceneStateMachine.Add("main_menu", new MainMenu(device));
+		sceneStateMachine.Add("game", new Game(device));
 		sceneStateMachine.Add("highscore", new Highscore());
 		sceneStateMachine.Add("editor", new Editor());
 		// Set initial scene.
 		sceneStateMachine.Change("main_menu");
 	}
-
-	auto meshSceneNode = sceneManager->addMeshSceneNode(player.GetMesh());
 
 	// Main loop.
 	bool isRunning = true;

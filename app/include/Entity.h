@@ -22,7 +22,8 @@ public:
 	void SetPosition(irr::core::vector3d<float> position);
 	void SetMesh(irr::scene::IMesh* mesh);
 	void setTexture(irr::video::ITexture* texture);
-
+	void SetMeshSceneNode(irr::scene::IMeshSceneNode* const mesh_scene_node);
+	
 	//Functions
 	virtual void Move(irr::core::vector3d<float> velocity, float delta, float baseSpeed = 1);
 private:

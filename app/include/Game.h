@@ -9,7 +9,7 @@
 class Game : public IState
 {
 public:
-	Game() = default;
+	Game(irr::IrrlichtDevice* device);
 	virtual ~Game() = default;
 
 	void OnEnter() override;
@@ -18,8 +18,9 @@ public:
 	void OnExit() override;
 
 private:
+	irr::IrrlichtDevice* device;
 	GameState m_currentState;
 	Player m_player;
 	irr::scene::ICameraSceneNode* m_camera;
-
+	std::vector<irr::scene::IMeshSceneNode*> m_meshSceneNodes;
 };
