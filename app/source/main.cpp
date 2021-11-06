@@ -28,7 +28,7 @@ int main()
 	EventHandler eventHandler;
 	irr::SIrrlichtCreationParameters params;
 	params.DriverType = irr::video::EDT_SOFTWARE;
-	params.WindowSize = irr::core::dimension2d<irr::u32>(800, 600);
+	params.WindowSize = irr::core::dimension2d<irr::u32>(800, 800);
 	params.Fullscreen = false;
 	params.Vsync = false;
 	params.AntiAlias = 8;
@@ -55,7 +55,7 @@ int main()
 	StateMachine sceneStateMachine;
 	{
 		// Use: M, G, E, H, Q to switch between current scenes.
-		sceneStateMachine.Add("main_menu", new MainMenu());
+		sceneStateMachine.Add("main_menu", new MainMenu(device, params.WindowSize.Width, params.WindowSize.Height));
 		sceneStateMachine.Add("game", new Game());
 		sceneStateMachine.Add("highscore", new Highscore());
 		sceneStateMachine.Add("editor", new Editor());

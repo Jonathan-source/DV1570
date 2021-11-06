@@ -19,7 +19,7 @@ public:
 
 private:
 	GameState m_currentState;
-	Player player;
-	irr::scene::ICameraSceneNode* camera;
+	Player m_player;
+	irr::scene::ICameraSceneNode* m_camera;
 
 };
