@@ -13,7 +13,6 @@ public:
 	virtual ~Game() = default;
 
 	void OnEnter() override;
-	void PlayerInput(const EventHandler& eventHandler);
 	void OnUserInput(const EventHandler& eventHandler) override;	
 	GameState OnUserUpdate() override;
 	void OnExit() override;

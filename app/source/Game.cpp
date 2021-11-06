@@ -4,6 +4,7 @@ Game::Game(irr::IrrlichtDevice* device)
 	: device(device), m_currentState(), m_camera(nullptr), then(0), now(0)
 {
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
+	//init player
 	m_player.SetRunSpeed(10);
 	m_player.SetHealth(100);
 	m_player.SetRunSpeed(10.f);
@@ -31,7 +32,7 @@ void Game::OnEnter()
 
 void Game::OnUserInput(const EventHandler& eventHandler)
 {
-	PlayerInput(eventHandler);
+	m_player.PlayerInput(eventHandler);
 	
 	if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
 		m_currentState = GameState::MENU;
@@ -55,29 +56,4 @@ void Game::OnExit()
 	m_player.SetMeshSceneNode(nullptr);
 	sceneManager->clear();
 
-}
-
-void Game::PlayerInput(const EventHandler& eventHandler)
-{
-	core::vector3d<float> velocity;
-
-	if (eventHandler.IsKeyDown(irr::KEY_KEY_A))
-		velocity.X = 1.0f;
-
-	if (eventHandler.IsKeyDown(irr::KEY_KEY_W))
-		velocity.Z = -1.0f;
-
-	if (eventHandler.IsKeyDown(irr::KEY_KEY_D))
-		velocity.X = -1.0f;
-
-	if (eventHandler.IsKeyDown(irr::KEY_KEY_S))
-		velocity.Z = 1.0f;
-
-	if (!eventHandler.IsKeyDown(irr::KEY_KEY_A) && !eventHandler.IsKeyDown(irr::KEY_KEY_D))
-		velocity.X = 0;
-
-	if (!eventHandler.IsKeyDown(irr::KEY_KEY_W) && !eventHandler.IsKeyDown(irr::KEY_KEY_S))
-		velocity.Z = 0;
-
-	m_player.SetVelocity(velocity);
 }

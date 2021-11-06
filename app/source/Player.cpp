@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "EventHandler.h"
 
 Player::Player()
 	:m_health(100),
@@ -43,12 +44,33 @@ void Player::SetRunSpeed(float runSpeed)
 	this->m_runSpeed = runSpeed;
 }
 
+void Player::PlayerInput(const EventHandler& eventHandler)
+{
+	if (eventHandler.IsKeyDown(irr::KEY_KEY_A))
+		m_velocity.X = 1.0f;
+
+	if (eventHandler.IsKeyDown(irr::KEY_KEY_W))
+		m_velocity.Z = -1.0f;
+
+	if (eventHandler.IsKeyDown(irr::KEY_KEY_D))
+		m_velocity.X = -1.0f;
+
+	if (eventHandler.IsKeyDown(irr::KEY_KEY_S))
+		m_velocity.Z = 1.0f;
+
+	if (!eventHandler.IsKeyDown(irr::KEY_KEY_A) && !eventHandler.IsKeyDown(irr::KEY_KEY_D))
+		m_velocity.X = 0;
+
+	if (!eventHandler.IsKeyDown(irr::KEY_KEY_W) && !eventHandler.IsKeyDown(irr::KEY_KEY_S))
+		m_velocity.Z = 0;
+}
+
 irr::core::vector3d<float> Player::GetVelocity() const
 {
-	return velocity;
+	return m_velocity;
 }
 
 void Player::SetVelocity(const irr::core::vector3d<float>& velocity)
 {
-	this->velocity = velocity;
+	this->m_velocity = velocity;
 }

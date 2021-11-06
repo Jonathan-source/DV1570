@@ -1,6 +1,8 @@
 #pragma once
 #include "Entity.h"
 
+class EventHandler;
+
 class Player : public Entity
 {
 public:
@@ -23,13 +25,14 @@ public:
 	void SetRunSpeed(float runSpeed);
 	
 	//Functions
+	void PlayerInput(const EventHandler& eventHandler);
 	void Shoot();
 	
 private:
 	int m_health;
 	int m_attackDmg;
 	float m_runSpeed;
-	irr::core::vector3d<float> velocity;
+	irr::core::vector3d<float> m_velocity;
 public:
 	irr::core::vector3d<float> GetVelocity() const;
 	void SetVelocity(const irr::core::vector3d<float>& velocity);
