@@ -53,14 +53,9 @@ void Game::OnExit()
 {
 	std::cout << __FUNCTION__ << std::endl;
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
-
-	for (auto& meshNode : m_meshSceneNodes)
-	{
-		meshNode->remove();
-	}
-
 	m_player.SetMeshSceneNode(nullptr);
-	m_meshSceneNodes.clear();
+	sceneManager->clear();
+
 }
 
 void Game::PlayerInput(const EventHandler& eventHandler)
