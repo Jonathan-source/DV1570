@@ -17,7 +17,7 @@ public:
 	[[nodiscard]] irr::core::vector3d<float> GetPosition() const;
 	[[nodiscard]] irr::scene::IMesh* GetMesh() const;
 	[[nodiscard]] irr::video::ITexture* GetTexture() const;
-	irr::scene::IMeshSceneNode* GetMeshSceneNode() const;
+	[[nodiscard]] irr::scene::IMeshSceneNode* GetMeshSceneNode() const;
 	
 	//Setters
 	void SetPosition(irr::core::vector3d<float> position);
