@@ -19,7 +19,7 @@
 * [Usage](#usage)
 
 ## General info
-ProjectName is a game project assignment made for school to learn about the Lua scripting language.
+This game is made in C++ using the Irrlicht Engine for 3D graphic rendering. It is made as an assignment at university and for learning about the Lua scripting language.
 
 ## Technologies
 Project is created with:
