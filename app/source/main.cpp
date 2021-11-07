@@ -53,7 +53,7 @@ int main()
 		sceneStateMachine.Add("main_menu", new MainMenu(device));
 		sceneStateMachine.Add("game", new Game(device));
 		sceneStateMachine.Add("highscore", new Highscore());
-		sceneStateMachine.Add("editor", new Editor());
+		sceneStateMachine.Add("editor", new Editor(device));
 		// Set initial scene.
 		sceneStateMachine.Change("main_menu");
 	}

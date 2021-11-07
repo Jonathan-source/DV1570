@@ -4,39 +4,37 @@
 
 #include <iostream>
 
+#include "Entity.h"
 #include "GameStates.h"
 #include "StateMachine.h"
 
 class Editor : public IState
 {
 public:
-	Editor() = default;
+	Editor(irr::IrrlichtDevice* device);
 	virtual ~Editor() = default;
 
-	void OnEnter() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-		m_currentState = GameState::NO_CHANGE;
-	}
-	void OnUserInput(const EventHandler& eventHandler) override
-	{
-		std::cout << __FUNCTION__ << std::endl;
+	void OnEnter() override;
 
-		if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
-			m_currentState = GameState::MENU;
-	}
-	GameState OnUserUpdate() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
+	void OnUserInput(const EventHandler& eventHandler) override;
 
-		return m_currentState;
-	}
-	void OnExit() override
-	{
-		std::cout << __FUNCTION__ << std::endl;
-	}
+	GameState OnUserUpdate() override;
+
+	void OnExit() override;
+
 
 private:
+	irr::IrrlichtDevice* device;
 	GameState m_currentState;
 
+	irr::scene::ICameraSceneNode* m_camera;
+	irr::core::vector3d<float> m_cameraDirection;
+
+	Entity m_test;
+
+
+	void UpdateCamera();
+	void HandleCameraInput(const EventHandler& eventHandler);
+	void ZoomIn();
+	void ZoomOut();
 };

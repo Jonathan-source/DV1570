@@ -15,25 +15,19 @@ public:
 
 	void OnEnter() override
 	{
-		std::cout << __FUNCTION__ << std::endl;
 		m_currentState = GameState::NO_CHANGE;
 	}
 	void OnUserInput(const EventHandler& eventHandler) override
 	{
-		std::cout << __FUNCTION__ << std::endl;
-
 		if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
 			m_currentState = GameState::MENU;
 	}
 	GameState OnUserUpdate() override
 	{
-		std::cout << __FUNCTION__ << std::endl;
-
 		return m_currentState;
 	}
 	void OnExit() override
 	{
-		std::cout << __FUNCTION__ << std::endl;
 	}
 
 private:
