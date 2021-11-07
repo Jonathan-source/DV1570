@@ -30,6 +30,7 @@ public:
 private:
 	irr::scene::IMesh* m_mesh;
 	irr::video::ITexture* m_texture;
+protected:
 	irr::scene::IMeshSceneNode* m_meshSceneNode;
 };
 
