@@ -27,7 +27,7 @@ void MainMenu::OnUserInput(const EventHandler& eventHandler)
 		m_currentState = GameState::EXIT;
 }
 
-GameState MainMenu::OnUserUpdate()
+GameState MainMenu::OnUserUpdate(float frameDelta)
 {
 	return m_currentState;
 }

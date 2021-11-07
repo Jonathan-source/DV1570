@@ -14,7 +14,7 @@ public:
 
 	void OnEnter() override;
 	void OnUserInput(const EventHandler& eventHandler) override;	
-	GameState OnUserUpdate() override;
+	GameState OnUserUpdate(float frameDelta) override;
 	void OnExit() override;
 
 private:
@@ -22,9 +22,5 @@ private:
 	GameState m_currentState;
 	Player m_player;
 	irr::scene::ICameraSceneNode* m_camera;
-
-	//Timer
-	u32 then;
-	u32 now;
-	f32 frameDeltaTime;
+	std::vector<Entity> entities;
 };

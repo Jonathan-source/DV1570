@@ -22,7 +22,7 @@ public:
 		if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
 			m_currentState = GameState::MENU;
 	}
-	GameState OnUserUpdate() override
+	GameState OnUserUpdate(float frameDelta) override
 	{
 		return m_currentState;
 	}

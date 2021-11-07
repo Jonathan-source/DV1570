@@ -7,7 +7,7 @@ class Player : public Entity
 {
 public:
 	Player();
-	Player(irr::core::vector3d<float>& position, irr::scene::IMesh* mesh, irr::video::ITexture* texture, int health, int attdmg, float runSpeed);
+	Player(irr::IrrlichtDevice* device, irr::scene::IMesh* mesh, irr::video::ITexture* texture = nullptr, int health = 100, int attdmg = 10, float runSpeed = 10.f, irr::core::vector3d<float> position = {0.f,0.f,0.f});
 	~Player() = default;
 	Player(const Player& other) = default; // copy constructor
 	Player(Player&& other) noexcept = default; // move constructor

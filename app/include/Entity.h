@@ -6,7 +6,7 @@ class Entity
 {
 public:
 	Entity();
-	Entity(irr::core::vector3d<float>& position, irr::scene::IMesh* mesh, irr::video::ITexture* texture);
+	Entity(irr::IrrlichtDevice* device, irr::scene::IMesh* mesh, irr::video::ITexture* texture = nullptr, irr::core::vector3d<float> position = {0.f,0.f,0.f});
 	virtual ~Entity() = default;
 	Entity(const Entity& other) = default; // copy constructor
 	Entity(Entity&& other) noexcept = default; // move constructor
@@ -28,7 +28,6 @@ public:
 	//Functions
 	virtual void Move(irr::core::vector3d<float> velocity, float delta, float baseSpeed = 1);
 private:
-	irr::core::vector3d<float> m_position;
 	irr::scene::IMesh* m_mesh;
 	irr::video::ITexture* m_texture;
 	irr::scene::IMeshSceneNode* m_meshSceneNode;

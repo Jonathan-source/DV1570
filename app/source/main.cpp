@@ -60,13 +60,22 @@ int main()
 
 	// Main loop.
 	bool isRunning = true;
+	
+	u32 then = device->getTimer()->getTime();
+	u32 now  = device->getTimer()->getTime();
+	
+	float frameDeltaTime = static_cast<f32>(now - then) / 1000.f; //time in seconds
+	
 	while (device->run() && isRunning)
 	{
 		if (device->isWindowActive())
 		{
+			now = device->getTimer()->getTime();
+			frameDeltaTime = static_cast<f32>(now - then) / 1000.f; //time in seconds
 			// Update current scene.
-			isRunning = sceneStateMachine.Update(eventHandler);
+			isRunning = sceneStateMachine.Update(eventHandler, frameDeltaTime);
 
+			then = now;
 			// Render current scene.
 			driver->beginScene(true, true, irr::video::SColor(255, 90, 101, 140));
 			sceneManager->drawAll();
