@@ -13,7 +13,7 @@ class IState
 public:
 	virtual ~IState() = default;
 	virtual void OnEnter() = 0;
-	virtual GameState OnUserUpdate() = 0;
+	virtual GameState OnUserUpdate(float frameDelta) = 0;
 	virtual void OnUserInput(const EventHandler& eventHandler) = 0;
 	virtual void OnExit() = 0;
 };
@@ -24,7 +24,7 @@ public:
 	EmptyState() = default;
 	virtual ~EmptyState() = default;
 	void OnEnter() override {}
-	GameState OnUserUpdate() override { return GameState::NO_CHANGE; }
+	GameState OnUserUpdate(float frameDelta) override { return GameState::NO_CHANGE; }
 	void OnUserInput(const EventHandler& eventHandler) override {}
 	void OnExit() override {}
 };
@@ -41,7 +41,7 @@ public:
 	void Clear();
 
 	void Change(const std::string &id);
-	bool Update(const EventHandler& eventHandler);
+	bool Update(const EventHandler& eventHandler, float frameDelta);
 
 private:
 	std::unordered_map<std::string, IState*> m_states;
@@ -89,11 +89,11 @@ inline void StateMachine::Change(const std::string& id)
 	m_current = next;
 }
 
-inline bool StateMachine::Update(const EventHandler& eventHandler)
+inline bool StateMachine::Update(const EventHandler& eventHandler, float frameDelta)
 {
 	bool status = true;
 	m_current->OnUserInput(eventHandler);
-	const GameState state = m_current->OnUserUpdate();
+	const GameState state = m_current->OnUserUpdate(frameDelta);
 	if(state != GameState::NO_CHANGE)
 	{
 		switch(state)

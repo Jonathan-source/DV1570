@@ -7,8 +7,8 @@ Player::Player()
 	m_runSpeed(1)
 {}
 
-Player::Player(irr::core::vector3d<float>& position, irr::scene::IMesh* mesh, irr::video::ITexture* texture, int health, int attdmg, float runSpeed)
-	:Entity(position, mesh, texture),
+Player::Player(irr::IrrlichtDevice* device, irr::scene::IMesh* mesh, irr::video::ITexture* texture, int health, int attdmg, float runSpeed, irr::core::vector3d<float> position)
+	:Entity(device, mesh, texture, position),
 	m_health(health),
 	m_attackDmg(attdmg),
 	m_runSpeed(runSpeed)

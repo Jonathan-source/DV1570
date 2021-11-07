@@ -25,7 +25,7 @@ public:
 		if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
 			m_currentState = GameState::MENU;
 	}
-	GameState OnUserUpdate() override
+	GameState OnUserUpdate(float frameDelta) override
 	{
 		std::cout << __FUNCTION__ << std::endl;
 

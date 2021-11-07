@@ -14,7 +14,7 @@ public:
 
 	void OnEnter() override;
 	void OnUserInput(const EventHandler& eventHandler) override;
-	GameState OnUserUpdate() override;
+	GameState OnUserUpdate(float frameDelta) override;
 	void OnExit() override;
 
 	//Initialize all buttons for menu
