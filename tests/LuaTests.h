@@ -1,8 +1,5 @@
 #pragma once
 
-#include <iostream>
-#include <lauxlib.h>
-
 namespace LUA_TESTS
 {
 	void TEST_1(lua_State* L)

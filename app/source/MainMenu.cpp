@@ -15,7 +15,7 @@ void MainMenu::OnEnter()
 	m_currentState = GameState::NO_CHANGE;
 }
 
-void MainMenu::OnUserInput(const EventHandler& eventHandler)
+void MainMenu::OnUserInput(const EventReceiver& eventHandler)
 {
 	if(m_playButton->isPressed())
 		m_currentState = GameState::GAME;

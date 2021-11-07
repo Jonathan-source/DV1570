@@ -1,7 +1,5 @@
 #pragma once
 
-#include <iostream>
-
 #include "Entity.h"
 #include "GameStates.h"
 #include "StateMachine.h"
@@ -14,9 +12,9 @@ public:
 
 	void OnEnter() override;
 
-	void OnUserInput(const EventHandler& eventHandler) override;
+	void OnUserInput(const EventReceiver& eventHandler) override;
 
-	GameState OnUserUpdate() override;
+	GameState OnUserUpdate(float frameDelta) override;
 
 	void OnExit() override;
 
@@ -26,13 +24,14 @@ private:
 	GameState m_currentState;
 
 	irr::scene::ICameraSceneNode* m_camera;
+	float m_cameraSpeed;
 	irr::core::vector3d<float> m_cameraDirection;
 
 	Entity m_test;
 
 
-	void UpdateCamera();
-	void HandleCameraInput(const EventHandler& eventHandler);
+	void UpdateCamera(float frameDelta);
+	void HandleCameraInput(const EventReceiver& eventHandler);
 	void ZoomIn();
 	void ZoomOut();
 };

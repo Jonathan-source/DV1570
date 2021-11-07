@@ -2,7 +2,7 @@
 #include <IGUIButton.h>
 #include <iostream>
 
-#include "EventHandler.h"
+#include "EventReceiver.h"
 #include "GameStates.h"
 #include "StateMachine.h"
 
@@ -13,7 +13,7 @@ public:
 	virtual ~MainMenu() = default;
 
 	void OnEnter() override;
-	void OnUserInput(const EventHandler& eventHandler) override;
+	void OnUserInput(const EventReceiver& eventHandler) override;
 	GameState OnUserUpdate(float frameDelta) override;
 	void OnExit() override;
 

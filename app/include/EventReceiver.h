@@ -1,10 +1,8 @@
 #pragma once
-
-#pragma once
 #include <irrlicht.h>
 
 using namespace irr;
-class EventHandler : public IEventReceiver
+class EventReceiver : public IEventReceiver
 {
 public:
 	// This is the one method that we have to implement
@@ -27,7 +25,7 @@ public:
 		return KeyIsDown[keyCode];
 	}
 
-	EventHandler()
+	EventReceiver()
 	{
 		for (u32 i = 0; i < KEY_KEY_CODES_COUNT; ++i)
 			KeyIsDown[i] = false;

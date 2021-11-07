@@ -2,6 +2,7 @@
 
 Editor::Editor(irr::IrrlichtDevice* device)
 	: device(device)
+	, m_cameraSpeed(10.f)
 {
 	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
 	m_test.SetMesh(sceneManager->getMesh("../resources/meshes/Cube.obj"));
@@ -17,23 +18,25 @@ void Editor::OnEnter()
 	m_camera->setPosition(irr::core::vector3df(0, 8, 8));
 	m_camera->setTarget(irr::core::vector3df(0, 0, 0));
 
+	// Create a plane.
 
 	m_currentState = GameState::NO_CHANGE;
 }
-void Editor::OnUserInput(const EventHandler& eventHandler)
+void Editor::OnUserInput(const EventReceiver& eventHandler)
 {
 	HandleCameraInput(eventHandler);
 
 	if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
 		m_currentState = GameState::MENU;
-
-
 }
-GameState Editor::OnUserUpdate()
+GameState Editor::OnUserUpdate(float frameDelta)
 {
 	// Update Camera.
-	UpdateCamera();
+	UpdateCamera(frameDelta);
 
+	// Update MouseOnGrid.
+	//UpdateMouseOnGrid();
+	
 	return m_currentState;
 }
 void Editor::OnExit()
@@ -44,11 +47,11 @@ void Editor::OnExit()
 	sceneManager->clear();
 }
 
-void Editor::UpdateCamera()
+void Editor::UpdateCamera(float frameDelta)
 {
 	// Update Camera position.
 	auto position = m_camera->getPosition();
-	position = position + m_cameraDirection;
+	position = position + m_cameraDirection * frameDelta * m_cameraSpeed;
 	m_camera->setPosition(position);
 
 	// Update Camera target.
@@ -57,7 +60,7 @@ void Editor::UpdateCamera()
 	m_camera->setTarget(target);
 }
 
-void Editor::HandleCameraInput(const EventHandler& eventHandler)
+void Editor::HandleCameraInput(const EventReceiver& eventHandler)
 {
 	// Camera Zoom.
 	if (eventHandler.IsKeyDown(irr::KEY_KEY_Q))

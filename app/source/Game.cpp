@@ -22,7 +22,7 @@ void Game::OnEnter()
 	m_currentState = GameState::NO_CHANGE;
 }
 
-void Game::OnUserInput(const EventHandler& eventHandler)
+void Game::OnUserInput(const EventReceiver& eventHandler)
 {
 	m_player.PlayerInput(eventHandler);
 	

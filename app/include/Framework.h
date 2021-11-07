@@ -3,7 +3,8 @@
 // Standard library.
 #include <iostream>
 #include <thread>
-
+#include <cassert>
+#include <chrono>
 
 // Lua.
 #include "lua.hpp"

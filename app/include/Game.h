@@ -13,7 +13,7 @@ public:
 	virtual ~Game() = default;
 
 	void OnEnter() override;
-	void OnUserInput(const EventHandler& eventHandler) override;	
+	void OnUserInput(const EventReceiver& eventHandler) override;	
 	GameState OnUserUpdate(float frameDelta) override;
 	void OnExit() override;
 

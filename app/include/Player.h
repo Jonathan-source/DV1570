@@ -1,7 +1,7 @@
 #pragma once
 #include "Entity.h"
 
-class EventHandler;
+class EventReceiver;
 
 class Player : public Entity
 {
@@ -25,7 +25,7 @@ public:
 	void SetRunSpeed(float runSpeed);
 	
 	//Functions
-	void PlayerInput(const EventHandler& eventHandler);
+	void PlayerInput(const EventReceiver& eventHandler);
 	void Shoot();
 	
 private:

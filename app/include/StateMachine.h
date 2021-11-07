@@ -5,7 +5,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "EventHandler.h"
+#include "EventReceiver.h"
 #include "GameStates.h"
 
 class IState
@@ -14,7 +14,7 @@ public:
 	virtual ~IState() = default;
 	virtual void OnEnter() = 0;
 	virtual GameState OnUserUpdate(float frameDelta) = 0;
-	virtual void OnUserInput(const EventHandler& eventHandler) = 0;
+	virtual void OnUserInput(const EventReceiver& eventHandler) = 0;
 	virtual void OnExit() = 0;
 };
 
@@ -25,7 +25,7 @@ public:
 	virtual ~EmptyState() = default;
 	void OnEnter() override {}
 	GameState OnUserUpdate(float frameDelta) override { return GameState::NO_CHANGE; }
-	void OnUserInput(const EventHandler& eventHandler) override {}
+	void OnUserInput(const EventReceiver& eventHandler) override {}
 	void OnExit() override {}
 };
 
@@ -41,7 +41,7 @@ public:
 	void Clear();
 
 	void Change(const std::string &id);
-	bool Update(const EventHandler& eventHandler, float frameDelta);
+	bool Update(const EventReceiver& eventHandler, float frameDelta);
 
 private:
 	std::unordered_map<std::string, IState*> m_states;
@@ -89,7 +89,7 @@ inline void StateMachine::Change(const std::string& id)
 	m_current = next;
 }
 
-inline bool StateMachine::Update(const EventHandler& eventHandler, float frameDelta)
+inline bool StateMachine::Update(const EventReceiver& eventHandler, float frameDelta)
 {
 	bool status = true;
 	m_current->OnUserInput(eventHandler);

@@ -17,7 +17,7 @@ public:
 	{
 		m_currentState = GameState::NO_CHANGE;
 	}
-	void OnUserInput(const EventHandler& eventHandler) override
+	void OnUserInput(const EventReceiver& eventHandler) override
 	{
 		if (eventHandler.IsKeyDown(irr::KEY_ESCAPE))
 			m_currentState = GameState::MENU;

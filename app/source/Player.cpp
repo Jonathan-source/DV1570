@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "EventHandler.h"
+#include "EventReceiver.h"
 
 Player::Player()
 	:m_health(100),
@@ -44,7 +44,7 @@ void Player::SetRunSpeed(float runSpeed)
 	this->m_runSpeed = runSpeed;
 }
 
-void Player::PlayerInput(const EventHandler& eventHandler)
+void Player::PlayerInput(const EventReceiver& eventHandler)
 {
 	if (eventHandler.IsKeyDown(irr::KEY_KEY_A))
 		m_velocity.X = 1.0f;
