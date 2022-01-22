@@ -2,7 +2,8 @@
 
 MainMenu::MainMenu()
 	:m_Numframes(3),
-	mousePoint({0.0f,0.0f})
+	mousePoint({ 0.0f,0.0f }),
+	buttonPadding(100.f)
 {
 }
 
@@ -33,36 +34,92 @@ GameState MainMenu::OnUserUpdate(float frameDelta)
 	// Update
 	//----------------------------------------------------------------------------------
 	mousePoint = GetMousePosition();
-	btnAction = false;
 
-	// Check button state
-	if (CheckCollisionPointRec(mousePoint, btnBounds))
+	// Check t_startButton state
+	if (CheckCollisionPointRec(mousePoint, startBtnBounds))
 	{
-		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) btnState = 2;
-		else btnState = 1;
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+			startBtnState = 2;
+		else
+			startBtnState = 1;
 
-		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) btnAction = true;
+		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+		{
+			startBtnAction = true;
+		}
+		
 	}
-	else btnState = 0;
+	else startBtnState = 0;
 
-	if (btnAction)
+	// Check t_editorButton state
+	if (CheckCollisionPointRec(mousePoint, editorBtnBounds))
+	{
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) editorBtnState = 2;
+		else editorBtnState = 1;
+
+		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) editorBtnAction = true;
+	}
+	else editorBtnState = 0;
+
+	// Check t_highscoreButton state
+	if (CheckCollisionPointRec(mousePoint, highscoreBtnBounds))
+	{
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) highscoreBtnState = 2;
+		else highscoreBtnState = 1;
+
+		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) highscoreBtnAction = true;
+	}
+	else highscoreBtnState = 0;
+
+	// Check t_exitButton state
+	if (CheckCollisionPointRec(mousePoint, exitBtnBounds))
+	{
+		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) exitBtnState = 2;
+		else exitBtnState = 1;
+
+		if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT)) exitBtnAction = true;
+	}
+	else exitBtnState = 0;
+
+	//Activate action of the button
+	if(startBtnAction)
 	{
 		PlaySound(fxButton);
-
-		// TODO: Any desired action
+		m_currentState = GameState::GAME;
+	}
+	else if(editorBtnAction)
+	{
+		PlaySound(fxButton);
+		m_currentState = GameState::EDITOR;
+	}
+	else if (highscoreBtnAction)
+	{
+		PlaySound(fxButton);
+		m_currentState = GameState::HIGHSCORE;
+	}
+	else if(exitBtnAction)
+	{
+		PlaySound(fxButton);
+		m_currentState = GameState::EXIT;
 	}
 
-	// Calculate button frame rectangle to draw depending on button state
-	sourceRec.y = btnState * frameHeight;
+	// Calculate t_startButton frame rectangle to draw depending on t_startButton state
+	srcRecStartButton.y = startBtnState * frameHeight;
+	srcRecEditorButton.y = editorBtnState * frameHeight;
+	srcRecHighscoreButton.y = highscoreBtnState * frameHeight;
+	srcRecExitButton.y = exitBtnState * frameHeight;
 	//----------------------------------------------------------------------------------
 
 
 	// Draw
 	//----------------------------------------------------------------------------------
 	BeginDrawing();
-	DrawText("Congrats! You created your first window!", ((float)GetScreenWidth() / 2.0f) - 300.f, float(GetScreenHeight()) / 2.0f + 200, 32, LIGHTGRAY);
-	DrawTextureRec(button, sourceRec, {btnBounds.x, btnBounds.y}, WHITE); // Draw button frame
-	ClearBackground(RAYWHITE);
+	DrawText("Main Menu!", ((float)GetScreenWidth() / 2.0f) - 85.f, 80, 32, YELLOW);
+	DrawTextureRec(t_startButton, srcRecStartButton, {startBtnBounds.x, startBtnBounds.y}, WHITE); // Draw t_startButton frame
+	DrawTextureRec(t_editorButton, srcRecEditorButton, { editorBtnBounds.x, editorBtnBounds.y }, WHITE); // Draw t_startButton frame
+	DrawTextureRec(t_highscoreButton, srcRecHighscoreButton, { highscoreBtnBounds.x, highscoreBtnBounds.y }, WHITE); // Draw t_startButton frame
+	DrawTextureRec(t_exitButton, srcRecExitButton, { exitBtnBounds.x, exitBtnBounds.y }, WHITE); // Draw t_startButton frame
+	ClearBackground(DARKGRAY);
 
 	EndDrawing();
 	//----------------------------------------------------------------------------------
@@ -72,46 +129,46 @@ GameState MainMenu::OnUserUpdate(float frameDelta)
 
 void MainMenu::OnExit()
 {
-	//m_playButton->remove();
-	//m_editorButton->remove();
-	//m_highScoreButton->remove();
-	//m_exitButton->remove();
+	UnloadTexture(t_startButton);
+	UnloadTexture(t_editorButton);
+	UnloadTexture(t_highscoreButton);
+	UnloadTexture(t_exitButton);
 }
 
 void MainMenu::InitButtons()
 {
 
 	fxButton = LoadSound("../resources/sounds/buttonfx.wav");
-	button = LoadTexture("../resources/textures/startbutton.png");
+	t_startButton = LoadTexture("../resources/textures/startbutton.png");
+	t_editorButton = LoadTexture("../resources/textures/editorbutton.png");
+	t_highscoreButton = LoadTexture("../resources/textures/highscorebutton.png");
+	t_exitButton = LoadTexture("../resources/textures/exitbutton.png");
 
-	frameHeight = static_cast<float>(button.height) / static_cast<float>(m_Numframes);
+	frameHeight = static_cast<float>(t_startButton.height) / static_cast<float>(m_Numframes);
 
-	sourceRec = { 0,0,static_cast<float>(button.width), frameHeight };
-	btnBounds = { (float)GetScreenWidth() / 2.0f - (float)button.width / 2.0f, (float)GetScreenHeight() / 2.0f - (float)button.height / m_Numframes / 2.0f, (float)button.width, frameHeight};
+	srcRecStartButton = { 0,0,static_cast<float>(t_startButton.width), frameHeight };
+	srcRecEditorButton = srcRecStartButton;
+	srcRecHighscoreButton = srcRecStartButton;
+	srcRecExitButton = srcRecStartButton;
 
-	btnState = 0;
-	btnAction = false;
+	startBtnBounds = { (float)GetScreenWidth() / 2.0f - (float)t_startButton.width / 2.0f, (float)GetScreenHeight() / 2.0f - (float)t_startButton.height / m_Numframes / 2.0f, (float)t_startButton.width, frameHeight };
+	startBtnBounds.y = 200.f;
+	editorBtnBounds = startBtnBounds;
+	editorBtnBounds.y += buttonPadding;
 
-	//int offsetX = (m_windowWidth / 4);
-	//int offsetY = (m_windowHeight / 8);
-	//int centerX = (m_windowWidth / 2);
-	//int currentYPos = offsetY;
-	//int padding = 10;
+	highscoreBtnBounds = editorBtnBounds;
+	highscoreBtnBounds.y += buttonPadding;
 
-	//wchar_t textPlay[] = L"Play";
-	//wchar_t textEditor[] = L"Editor";
-	//wchar_t textHighScore[] = L"High Score";
-	//wchar_t textExit[] = L"Exit";
+	exitBtnBounds = highscoreBtnBounds;
+	exitBtnBounds.y += buttonPadding;
 
-	////Play button
-	//m_playButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textPlay);
-	//currentYPos += offsetY;
-	////Editor button
-	//m_editorButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textEditor);
-	//currentYPos += offsetY;
-	////High score button
-	//m_highScoreButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textHighScore);
-	//currentYPos += offsetY;
-	////Exit button
-	//m_exitButton = guienv->addButton(irr::core::rect<irr::s32>((centerX - (offsetX / 2)), (currentYPos + padding), (centerX + (offsetX / 2)), (currentYPos + offsetY)), nullptr, 0, textExit);
+	startBtnState = 0;
+	editorBtnState = 0;
+	highscoreBtnState = 0;
+	exitBtnState = 0;
+
+	startBtnAction = false;
+	editorBtnAction = false;
+	highscoreBtnAction = false;
+	exitBtnAction = false;
 }

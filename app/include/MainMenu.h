@@ -24,13 +24,35 @@ private:
 	Vector2 mousePoint;
 
 	//Menu buttons
-	int m_Numframes; //Number of frames for button sprite texture
-	float frameHeight; //Define frame rectangle height for button
-	Rectangle sourceRec;
-	Rectangle btnBounds;
-	int btnState; // Button state: 0-NORMAL, 1-MOUSE_HOVER, 2-PRESSED
-	bool btnAction;
+	int m_Numframes; //Number of frames for t_startButton sprite texture
+	float frameHeight; //Define frame rectangle height for t_startButton
+	float buttonPadding; //Padding between buttons
+
+	Rectangle srcRecStartButton;
+	Rectangle srcRecEditorButton;
+	Rectangle srcRecHighscoreButton;
+	Rectangle srcRecExitButton;
+
+	Rectangle startBtnBounds;
+	Rectangle editorBtnBounds;
+	Rectangle highscoreBtnBounds;
+	Rectangle exitBtnBounds;
+
+	int startBtnState; // Button state: 0-NORMAL, 1-MOUSE_HOVER, 2-PRESSED
+	int editorBtnState;
+	int highscoreBtnState;
+	int exitBtnState;
+
+	bool startBtnAction;
+	bool editorBtnAction;
+	bool highscoreBtnAction;
+	bool exitBtnAction;
+
 	Sound fxButton;
-	Texture2D button;
+
+	Texture2D t_startButton;
+	Texture2D t_editorButton;
+	Texture2D t_highscoreButton;
+	Texture2D t_exitButton;
 
 };

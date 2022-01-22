@@ -16,7 +16,7 @@ void Application::Run()
 
     float frameDeltaTime = GetFrameTime(); // time in seconds
         // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose())    // Detect window close t_startButton or ESC key
     {
         // Update
         //----------------------------------------------------------------------------------
