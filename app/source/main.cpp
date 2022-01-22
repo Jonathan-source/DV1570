@@ -1,98 +1,62 @@
-#include "Framework.h"
-#include "LuaTests.h"
-#include "Player.h"
-#include "EventHandler.h"
+/*******************************************************************************************
+*
+*   raylib [core] example - Basic window
+*
+*   Welcome to raylib!
+*
+*   To test examples, just press F6 and execute raylib_compile_execute script
+*   Note that compiled executable is placed in the same folder as .c file
+*
+*   You can find all basic examples on C:\raylib\raylib\examples folder or
+*   raylib official webpage: www.raylib.com
+*
+*   Enjoy using raylib. :)
+*
+*   This example has been created using raylib 1.0 (www.raylib.com)
+*   raylib is licensed under an unmodified zlib/libpng license (View raylib.h for details)
+*
+*   Copyright (c) 2013-2016 Ramon Santamaria (@raysan5)
+*
+********************************************************************************************/
 
-#include "Game.h"
-#include "Highscore.h"
-#include "MainMenu.h"
-#include "Editor.h"
-
-#include "StateMachine.h"
-
-
+#include "raylib.h"
 int main()
 {
-#ifdef _DEBUG
-	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
-#endif
+    
+    // Initialization
+    //--------------------------------------------------------------------------------------
+    const int screenWidth = 800;
+    const int screenHeight = 450;
 
-	// Setup Lua.
-	lua_State * L = luaL_newstate();
-	luaL_openlibs(L);
+    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
 
-	std::thread conThread(ConsoleThread, L);
+    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    //--------------------------------------------------------------------------------------
+    
+    // Main game loop
+    while (!WindowShouldClose())    // Detect window close button or ESC key
+    {
+        // Update
+        //----------------------------------------------------------------------------------
+        // TODO: Update your variables here
+        //----------------------------------------------------------------------------------
 
-	// Test some Lua code.
-	LUA_TESTS::TEST_1(L);
+        // Draw
+        //----------------------------------------------------------------------------------
+        BeginDrawing();
 
+            ClearBackground(RAYWHITE);
 
-	// Setup Irrlicht.
-	EventHandler eventHandler;
-	irr::SIrrlichtCreationParameters params;
-	params.DriverType = irr::video::EDT_SOFTWARE;
-	params.WindowSize = irr::core::dimension2d<irr::u32>(1920, 1080);
-	params.Fullscreen = false;
-	params.Vsync = false;
-	params.AntiAlias = 8;
-	params.EventReceiver = &eventHandler;
-	irr::IrrlichtDevice* device = irr::createDeviceEx(params);
-	if (!device)
-		return EXIT_FAILURE;
+            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
-	device->setWindowCaption(L"Application");
-	irr::video::IVideoDriver* driver = device->getVideoDriver();
-	irr::scene::ISceneManager* sceneManager = device->getSceneManager();
-	irr::gui::IGUIEnvironment* guienv = device->getGUIEnvironment();
+        EndDrawing();
+        //----------------------------------------------------------------------------------
+    }
 
+    // De-Initialization
+    //--------------------------------------------------------------------------------------
+    CloseWindow();        // Close window and OpenGL context
+    //--------------------------------------------------------------------------------------
 
-	// Add scenes.
-	StateMachine sceneStateMachine;
-	{
-		// Use: M, G, E, H, Q to switch between current scenes.
-		sceneStateMachine.Add("main_menu", new MainMenu(device));
-		sceneStateMachine.Add("game", new Game(device));
-		sceneStateMachine.Add("highscore", new Highscore());
-		sceneStateMachine.Add("editor", new Editor());
-		// Set initial scene.
-		sceneStateMachine.Change("main_menu");
-	}
-
-	// Main loop.
-	bool isRunning = true;
-	
-	u32 then = device->getTimer()->getTime();
-	u32 now  = device->getTimer()->getTime();
-	
-	float frameDeltaTime = static_cast<f32>(now - then) / 1000.f; //time in seconds
-	
-	while (device->run() && isRunning)
-	{
-		if (device->isWindowActive())
-		{
-			now = device->getTimer()->getTime();
-			frameDeltaTime = static_cast<f32>(now - then) / 1000.f; //time in seconds
-			// Update current scene.
-			isRunning = sceneStateMachine.Update(eventHandler, frameDeltaTime);
-
-			then = now;
-			// Render current scene.
-			driver->beginScene(true, true, irr::video::SColor(255, 90, 101, 140));
-			sceneManager->drawAll();
-			guienv->drawAll();
-			driver->endScene();
-		}
-		else
-		{
-			device->yield();
-		}
-	}
-	
-	// Cleanup.
-	device->closeDevice();								// Close Irrlicht.
-	PostMessage(GetConsoleWindow(), WM_CLOSE, 0, 0);	// Close Console Window.		
-	lua_close(L);										// Close Lua.
-	conThread.join();									// Join Console Thread.
-
-	return EXIT_SUCCESS;
+    return 0;
 }

@@ -32,8 +32,7 @@ project "Application"
 		"%{wks.location}/resources/texture/",
 		"%{wks.location}/resources/mesh/",
         "%{wks.location}/tests/",
-		"%{wks.location}/libs/irrlicht/lib/x64/",
-		"%{wks.location}/libs/irrlicht/include/",
+		"%{wks.location}/libs/raylib/include/",
 		"%{wks.location}/libs/lua542/include/",
     }
     
@@ -46,10 +45,12 @@ project "Application"
     }
 
 	links {
+        "raylib.lib",
+        "winmm.lib",
 	}
 
 	libdirs {
-		"%{wks.location}/libs/irrlicht/lib/x64/",
+		"%{wks.location}/libs/raylib/",
 	}
 
      -- Define a macro/symbol which applies on a windows system.
@@ -60,7 +61,7 @@ project "Application"
         }
         -- Specifies shell commands to run after build is finished.
 	    postbuildcommands {
-	        "{COPYFILE} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+	        "{COPYFILE} %{wks.location}/resources/dlls/raylib.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
             "{COPYFILE} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
 		}
 

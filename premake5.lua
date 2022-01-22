@@ -19,8 +19,8 @@ workspace "DV1570"
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 	postbuildcommands {
-       -- "{COPY} Irrlicht.dll %{wks.location}/app/build/bin/" .. outputdir .. "/app/",
-		--"{COPY} lua54.dll %{wks.location}/app/build/bin/" .. outputdir .. "/app/"
+        "{COPY} raylib.dll %{wks.location}/app/build/bin/" .. outputdir .. "/app/",
+	    "{COPY} lua54.dll %{wks.location}/app/build/bin/" .. outputdir .. "/app/"
 	}
 
 -- Subprojects.
