@@ -21,10 +21,10 @@ void Application::Run()
         // Update
         //----------------------------------------------------------------------------------
         frameDeltaTime = GetFrameTime();
+        DrawFPS(10, 10);
         m_isRunning = m_sceneStateMachine.Update(frameDeltaTime);
         //----------------------------------------------------------------------------------
     }
-
 }
 
 void Application::SetupEngine()
