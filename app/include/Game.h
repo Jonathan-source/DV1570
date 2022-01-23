@@ -14,10 +14,12 @@ public:
 
 	void OnEnter() override;
 	void OnUserInput() override;
+	void UpdateCamera();
 	GameState OnUserUpdate(float frameDelta) override;
 	void OnExit() override;
-
+	void InitCamera();
 private:
 	GameState m_currentState;
-	//Player m_player;
+	Camera m_camera;
+	Player m_player;
 };

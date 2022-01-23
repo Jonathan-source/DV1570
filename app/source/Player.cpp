@@ -4,7 +4,8 @@ Player::Player()
 	:Entity(),
 	m_health(100),
 	m_attackDmg(1),
-	m_runSpeed(1)
+	m_runSpeed(1),
+	m_velocity({0.f,0.f,0.f})
 {
 	
 }
@@ -52,13 +53,13 @@ void Player::PlayerInput()
 		m_velocity.x = 1.0f;
 
 	if (IsKeyDown(KEY_W))
-		m_velocity.z = -1.0f;
+		m_velocity.z = 1.0f;
 
 	if (IsKeyDown(KEY_D))
 		m_velocity.x = -1.0f;
 
 	if (IsKeyDown(KEY_S))
-		m_velocity.z = 1.0f;
+		m_velocity.z = -1.0f;
 
 	if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D))
 		m_velocity.x = 0;
