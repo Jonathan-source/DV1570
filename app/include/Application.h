@@ -15,7 +15,7 @@ public:
     virtual ~Application() = default;
 
     void Run();
-
+    
 private:
     StateMachine m_sceneStateMachine;
     bool m_isRunning;

@@ -19,7 +19,7 @@ public:
 
 private:
 	GameState m_currentState;
-
+	
 	//Mouse
 	Vector2 mousePoint;
 
