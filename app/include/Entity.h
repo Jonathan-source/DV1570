@@ -16,12 +16,17 @@ public:
 
 	//Getters
 	[[nodiscard]] Vector3 GetPosition() const;
-
+	[[nodiscard]] Model GetModel() const;
 	//Setters
 	void SetPosition(Vector3 position);
+	void SetModel(Model model);
+
+
 
 	//Functions
 	virtual void Move(Vector3 velocity, float delta, float baseSpeed = 1);
 private:
 	Vector3 m_position;
+protected:
+	Model m_model;
 };

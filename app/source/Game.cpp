@@ -37,7 +37,7 @@ GameState Game::OnUserUpdate(float frameDelta)
 
 	ClearBackground(RAYWHITE);
 	BeginMode3D(m_camera);
-		DrawCube(m_player.GetPosition(), 2.0f, 2.0f, 2.0f, RED);
+		DrawModel(m_player.GetModel(), m_player.GetPosition(), 0.2f, WHITE);
 		DrawCubeWires({0,0,0}, 2.0f, 2.0f, 2.0f, MAROON);
 		DrawGrid(10, 1.0f);
 	EndMode3D();
@@ -66,4 +66,5 @@ void Game::InitCamera()
 	m_camera.up = { 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
 	m_camera.fovy = 45.0f;                                // Camera field-of-view Y
 	m_camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
+	
 }

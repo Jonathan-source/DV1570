@@ -20,17 +20,21 @@ public:
 	void SetHealth(int health);
 	void SetAttackDamage(int attdmg);
 	void SetRunSpeed(float runSpeed);
+	void SetTexture(Texture2D texture);
 
 	//Functions
 	void PlayerInput();
 	void Shoot();
 
-	Vector3 GetVelocity() const;
+	[[nodiscard]] Vector3 GetVelocity() const;
+	[[nodiscard]] Texture2D GetTexture() const;
 	void SetVelocity(const Vector3& velocity);
+
 private:
 	int m_health;
 	int m_attackDmg;
 	float m_runSpeed;
 	Vector3 m_velocity;
+	Texture2D m_texture;
 
 };
