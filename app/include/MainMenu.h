@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include "GameState.h"
 #include "StateMachine.h"
 
 class MainMenu : public IState
@@ -10,16 +9,15 @@ public:
 	virtual ~MainMenu() = default;
 
 	void OnEnter() override;
-	void OnUserInput() override;
-	GameState OnUserUpdate(float frameDelta) override;
+	void OnInput() override;
+	void OnUpdate(float frameDelta) override;
+	void OnRender() override;
 	void OnExit() override;
 
 	//Initialize all buttons for menu
 	void InitButtons();
 
-private:
-	GameState m_currentState;
-	
+private:	
 	//Mouse
 	Vector2 mousePoint;
 

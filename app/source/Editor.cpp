@@ -6,27 +6,32 @@ Editor::Editor()
 
 void Editor::OnEnter()
 {
-	m_currentState = GameState::NO_CHANGE;
+
 }
-void Editor::OnUserInput()
+
+void Editor::OnInput()
 {
 	HandleCameraInput();
 
-	if (IsKeyDown(KEY_ESCAPE))
-		m_currentState = GameState::MENU;
 }
-GameState Editor::OnUserUpdate(float frameDelta)
+
+void Editor::OnUpdate(float frameDelta)
 {
 	// Update Camera.
 	UpdateCamera(frameDelta);
 
 	// Update MouseOnGrid.
 	//UpdateMouseOnGrid();
-
-	return m_currentState;
 }
+
+void Editor::OnRender()
+{
+
+}
+
 void Editor::OnExit()
 {
+
 }
 
 void Editor::UpdateCamera(float frameDelta)
@@ -39,7 +44,6 @@ void Editor::HandleCameraInput()
 
 
 	// Camera Movement.
-
 }
 
 void Editor::ZoomIn()

@@ -11,31 +11,23 @@ void MainMenu::OnEnter()
 {
 	InitButtons();
 
+}
 
-	m_currentState = GameState::NO_CHANGE;
+void MainMenu::OnInput()
+{
 
 }
 
-void MainMenu::OnUserInput()
+void MainMenu::OnUpdate(float frameDelta)
 {
-	//if (m_playButton->isPressed())
-	//	m_currentState = GameState::GAME;
-	//else if (m_editorButton->isPressed())
-	//	m_currentState = GameState::EDITOR;
-	//else if (m_highScoreButton->isPressed())
-	//	m_currentState = GameState::HIGHSCORE;
-	//else if (m_exitButton->isPressed())
-	//	m_currentState = GameState::EXIT;
-}
-
-GameState MainMenu::OnUserUpdate(float frameDelta)
-{
-
-	// Update
-	//----------------------------------------------------------------------------------
 	mousePoint = GetMousePosition();
 
 	// Check t_startButton state
+	startBtnAction = false;
+	editorBtnAction = false;
+	highscoreBtnAction = false;
+	exitBtnAction = false;
+
 	if (CheckCollisionPointRec(mousePoint, startBtnBounds))
 	{
 		if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
@@ -81,26 +73,23 @@ GameState MainMenu::OnUserUpdate(float frameDelta)
 	}
 	else exitBtnState = 0;
 
-	//Activate action of the button
+	// Activate action of the button
 	if(startBtnAction)
 	{
 		PlaySound(fxButton);
-		m_currentState = GameState::GAME;
+		GetStateMachine()->Change("Game");
 	}
 	else if(editorBtnAction)
 	{
 		PlaySound(fxButton);
-		m_currentState = GameState::EDITOR;
 	}
 	else if (highscoreBtnAction)
 	{
 		PlaySound(fxButton);
-		m_currentState = GameState::HIGHSCORE;
 	}
 	else if(exitBtnAction)
 	{
 		PlaySound(fxButton);
-		m_currentState = GameState::EXIT;
 	}
 
 	// Calculate t_startButton frame rectangle to draw depending on t_startButton state
@@ -109,22 +98,20 @@ GameState MainMenu::OnUserUpdate(float frameDelta)
 	srcRecHighscoreButton.y = highscoreBtnState * frameHeight;
 	srcRecExitButton.y = exitBtnState * frameHeight;
 	//----------------------------------------------------------------------------------
+}
 
-
-	// Draw
-	//----------------------------------------------------------------------------------
+void MainMenu::OnRender()
+{
 	BeginDrawing();
+	ClearBackground(DARKGRAY);
+
 	DrawText("Main Menu!", ((float)GetScreenWidth() / 2.0f) - 85.f, 80, 32, YELLOW);
-	DrawTextureRec(t_startButton, srcRecStartButton, {startBtnBounds.x, startBtnBounds.y}, WHITE); // Draw t_startButton frame
+	DrawTextureRec(t_startButton, srcRecStartButton, { startBtnBounds.x, startBtnBounds.y }, WHITE); // Draw t_startButton frame
 	DrawTextureRec(t_editorButton, srcRecEditorButton, { editorBtnBounds.x, editorBtnBounds.y }, WHITE); // Draw t_startButton frame
 	DrawTextureRec(t_highscoreButton, srcRecHighscoreButton, { highscoreBtnBounds.x, highscoreBtnBounds.y }, WHITE); // Draw t_startButton frame
 	DrawTextureRec(t_exitButton, srcRecExitButton, { exitBtnBounds.x, exitBtnBounds.y }, WHITE); // Draw t_startButton frame
-	ClearBackground(DARKGRAY);
 
 	EndDrawing();
-	//----------------------------------------------------------------------------------
-
-	return m_currentState;
 }
 
 void MainMenu::OnExit()

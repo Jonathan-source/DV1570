@@ -1,16 +1,11 @@
 #include "Game.h"
 
-Game::Game()
-{
-}
-
 void Game::OnEnter()
 {
 	InitCamera();
-	m_currentState = GameState::NO_CHANGE;
 }
 
-void Game::OnUserInput()
+void Game::OnInput()
 {
 	m_player.PlayerInput();
 }
@@ -21,37 +16,30 @@ void Game::UpdateCamera()
 	m_camera.target = m_player.GetPosition();
 }
 
-GameState Game::OnUserUpdate(float frameDelta)
+void Game::OnUpdate(float frameDelta)
 {
 	// Update Player.
 	m_player.Move(m_player.GetVelocity(), frameDelta, m_player.GetRunSpeed());
+
 	// Update Camera.
 	UpdateCamera();
+}
 
-	if (IsKeyReleased(KEY_B))
-		m_currentState = GameState::MENU;
-
-	// Draw
-	//----------------------------------------------------------------------------------
+void Game::OnRender()
+{
 	BeginDrawing();
-
 	ClearBackground(RAYWHITE);
+
 	BeginMode3D(m_camera);
-		DrawModel(m_player.GetModel(), m_player.GetPosition(), 0.2f, WHITE);
-		DrawCubeWires({0,0,0}, 2.0f, 2.0f, 2.0f, MAROON);
-		DrawGrid(10, 1.0f);
+	DrawModel(m_player.GetModel(), m_player.GetPosition(), 0.2f, WHITE);
+	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
+	DrawGrid(10, 1.0f);
 	EndMode3D();
-
-
 
 	DrawText("GAME!", ((float)GetScreenWidth() - 100.f), 10, 32, BLACK);
 	DrawFPS(10, 10);
 
-
 	EndDrawing();
-	//----------------------------------------------------------------------------------
-
-	return m_currentState;
 }
 
 void Game::OnExit()

@@ -1,6 +1,5 @@
 #pragma once
 #include "Entity.h"
-#include "GameState.h"
 #include "StateMachine.h"
 
 class Editor : public IState
@@ -11,17 +10,17 @@ public:
 
 	void OnEnter() override;
 
-	void OnUserInput() override;
+	void OnInput() override;
 
-	GameState OnUserUpdate(float frameDelta) override;
+	void OnUpdate(float frameDelta) override;
+
+	void OnRender() override;
 
 	void OnExit() override;
 
 
 private:
-	GameState m_currentState;
 	Camera m_camera;
-
 	Entity m_test;
 
 	void UpdateCamera(float frameDelta);

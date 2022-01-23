@@ -4,7 +4,6 @@
 
 #include <iostream>
 
-#include "GameState.h"
 #include "StateMachine.h"
 
 class Highscore : public IState
@@ -15,22 +14,29 @@ public:
 
 	void OnEnter() override
 	{
-		m_currentState = GameState::NO_CHANGE;
+
 	}
-	void OnUserInput() override
+
+	void OnInput() override
 	{
-		if (IsKeyReleased(KEY_ESCAPE))
-			m_currentState = GameState::MENU;
+
 	}
-	GameState OnUserUpdate(float frameDelta) override
+
+	void OnUpdate(float frameDelta) override
 	{
-		return m_currentState;
+
 	}
+
+	void OnRender() override
+	{
+
+	}
+
 	void OnExit() override
 	{
+
 	}
 
 private:
-	GameState m_currentState;
 
 };

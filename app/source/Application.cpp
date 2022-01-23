@@ -8,29 +8,24 @@ Application::Application():
 }
 
 void Application::Run()
-{
-    // Setup Lua.
-    //lua_State* L = luaL_newstate();
-    //luaL_openlibs(L);
-    //std::thread conThread(ConsoleThread, L);
-
-    float frameDeltaTime = GetFrameTime(); // time in seconds
-        // Main game loop
-    while (!WindowShouldClose())    // Detect window close t_startButton or ESC key
+{    
+    IState* currentState = nullptr;
+    while (!WindowShouldClose())
     {
-        // Update
-        //----------------------------------------------------------------------------------
-        frameDeltaTime = GetFrameTime();
+        currentState = m_sceneStateMachine.Current();
+        
+        currentState->OnInput();
+
+        currentState->OnUpdate(GetFrameTime());
+
+        currentState->OnRender();
+
         DrawFPS(10, 10);
-        m_isRunning = m_sceneStateMachine.Update(frameDeltaTime);
-        //----------------------------------------------------------------------------------
     }
 }
 
 void Application::SetupEngine()
 {
-    // Initialization
-    //--------------------------------------------------------------------------------------
     const int screenWidth = 1280;
     const int screenHeight = 800;
 
@@ -38,16 +33,16 @@ void Application::SetupEngine()
 
     InitAudioDevice();
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    SetTargetFPS(60);
 }
 
 void Application::SetupGameScenes()
 {
-    m_sceneStateMachine.Add("main_menu", new MainMenu());
-    m_sceneStateMachine.Add("game", new Game());
-    m_sceneStateMachine.Add("highscore", new Highscore());
-    m_sceneStateMachine.Add("editor", new Editor());
+    m_sceneStateMachine.Add("MainMenu", new MainMenu());
+    m_sceneStateMachine.Add("Game", new Game());
+    m_sceneStateMachine.Add("Highscore", new Highscore());
+    m_sceneStateMachine.Add("Editor", new Editor());
 
-	//Set initial scene.
-    m_sceneStateMachine.Change("main_menu");
+	// Set initial scene
+    m_sceneStateMachine.Change("MainMenu");
 }
