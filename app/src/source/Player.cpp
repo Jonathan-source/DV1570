@@ -4,7 +4,7 @@ Player::Player()
 	:Entity(),
 	m_health(100),
 	m_attackDmg(1),
-	m_runSpeed(1),
+	m_runSpeed(5),
 	m_velocity({0.f,0.f,0.f})
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));

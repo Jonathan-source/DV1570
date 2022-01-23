@@ -15,8 +15,8 @@ project "Application"
 
     -- Define the location(s) of files.
     files {
-        "%{wks.location}/app/include/**.h",
-		"%{wks.location}/app/source/**.cpp",
+        "%{wks.location}/app/src/include/**.h",
+		"%{wks.location}/app/src/source/**.cpp",
         "%{wks.location}/resources/scripts/**.lua",
         "%{wks.location}/tests/**.h",
 		"%{wks.location}/resources/texture/**.png",
@@ -26,8 +26,9 @@ project "Application"
 
     -- Specifies a list of include file search directories.
     includedirs {
-        "%{wks.location}/app/source/",
-        "%{wks.location}/app/include/",
+        "%{wks.location}/app/src/",
+        "%{wks.location}/app/src/include/",
+		"%{wks.location}/app/src/source/",
 		"%{wks.location}/resources/scripts/",
 		"%{wks.location}/resources/texture/",
 		"%{wks.location}/resources/mesh/",
@@ -38,10 +39,12 @@ project "Application"
     
     -- This is the place to add filters.
     vpaths {
-        ["Headers/"] = { "**.h", "**.hpp" },
-        ["Sources/"] = { "**.c", "**.cpp"},
-        ["Scripts/"] = { "**.lua"},
-        ["Tests/"] = { "LuaTests.h", "LuaTests.cpp"},
+        ["src/"] = { "**main.cpp" },
+            ["src/Application/"] = { "**Application.*" },
+            ["src/GameStates/"] = { "**StateMachine.h", "**MainMenu.*", "**Game.*", "**Highscore.*", "**Editor.*" },
+            ["src/Enitity/"] = { "**Entity.*", "**Player.*", "**Enemy.*", "**EnemyManager.*" },
+        ["src/Scripts/"] = { "**.lua"},
+        ["src/Tests/"] = { "**LuaTests.*"},
     }
 
 	links {

@@ -1,7 +1,7 @@
 #include "Application.h"
 
-Application::Application():
-    m_sceneStateMachine(StateMachine())
+Application::Application()
+    : m_sceneStateMachine(StateMachine())
 {
     SetupEngine();
     SetupGameScenes();
