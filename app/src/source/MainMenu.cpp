@@ -98,6 +98,8 @@ bool MainMenu::OnUpdate(float frameDelta)
 	srcRecHighscoreButton.y = highscoreBtnState * frameHeight;
 	srcRecExitButton.y = exitBtnState * frameHeight;
 	//----------------------------------------------------------------------------------
+
+	return true;
 }
 
 void MainMenu::OnRender()
