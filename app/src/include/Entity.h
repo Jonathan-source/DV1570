@@ -3,6 +3,19 @@
 #include <raymath.h>
 #include <string>
 
+// include Lua, assumes it is local to this file
+extern "C"
+{
+#include "../libs/lua542/include/lua.h"
+#include "../libs/lua542/include/lauxlib.h"
+#include "../libs/lua542/include/lualib.h"
+}
+
+// Link to lua library
+#ifdef _WIN32
+#pragma comment(lib, "../libs/lua542/liblua54.a")
+#endif
+
 class Entity
 {
 public:
