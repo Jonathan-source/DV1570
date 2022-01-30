@@ -1,7 +1,7 @@
 #include "Entity.h"
 
 Entity::Entity()
-	:m_position({0.f,0.f,0.f})
+	 : m_position({0.f,0.f,0.f})
 {
 }
 

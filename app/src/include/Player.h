@@ -15,6 +15,7 @@ public:
 	[[nodiscard]] int GetHealth() const;
 	[[nodiscard]] int GetAttackDamage() const;
 	[[nodiscard]] float GetRunSpeed() const;
+	[[nodiscard]] Vector2 GetDirection() const;
 
 	//Setters
 	void SetHealth(int health);
@@ -23,7 +24,7 @@ public:
 	void SetTexture(Texture2D texture);
 
 	//Functions
-	void PlayerInput();
+	void PlayerInput(const Ray &ray);
 	void Shoot();
 
 	[[nodiscard]] Vector3 GetVelocity() const;
@@ -35,6 +36,7 @@ private:
 	int m_attackDmg;
 	float m_runSpeed;
 	Vector3 m_velocity;
+	Vector2 m_direction;
 	Texture2D m_texture;
-
+	void RotateWithMouse(const Ray& ray);
 };

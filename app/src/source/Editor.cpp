@@ -12,16 +12,17 @@ void Editor::OnEnter()
 void Editor::OnInput()
 {
 	HandleCameraInput();
-
 }
 
-void Editor::OnUpdate(float frameDelta)
+bool Editor::OnUpdate(float frameDelta)
 {
 	// Update Camera.
 	UpdateCamera(frameDelta);
 
 	// Update MouseOnGrid.
 	//UpdateMouseOnGrid();
+
+	return true;
 }
 
 void Editor::OnRender()

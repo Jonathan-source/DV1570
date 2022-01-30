@@ -18,7 +18,7 @@ void MainMenu::OnInput()
 
 }
 
-void MainMenu::OnUpdate(float frameDelta)
+bool MainMenu::OnUpdate(float frameDelta)
 {
 	mousePoint = GetMousePosition();
 
@@ -89,7 +89,7 @@ void MainMenu::OnUpdate(float frameDelta)
 	}
 	else if(exitBtnAction)
 	{
-		PlaySound(fxButton);
+		return false; // exit application.
 	}
 
 	// Calculate t_startButton frame rectangle to draw depending on t_startButton state

@@ -10,13 +10,15 @@ Application::Application()
 void Application::Run()
 {    
     IState* currentState = nullptr;
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && m_isRunning)
     {
         currentState = m_sceneStateMachine.Current();
         
+        // Update Lua?
+
         currentState->OnInput();
 
-        currentState->OnUpdate(GetFrameTime());
+        m_isRunning = currentState->OnUpdate(GetFrameTime());
 
         currentState->OnRender();
 
@@ -28,8 +30,10 @@ void Application::SetupEngine()
 {
     const int screenWidth = 1280;
     const int screenHeight = 800;
+    m_isRunning = true;
 
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "The Game");
+    SetExitKey(KEY_NULL);
 
     InitAudioDevice();
 

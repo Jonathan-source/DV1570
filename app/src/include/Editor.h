@@ -12,7 +12,7 @@ public:
 
 	void OnInput() override;
 
-	void OnUpdate(float frameDelta) override;
+	bool OnUpdate(float frameDelta) override;
 
 	void OnRender() override;
 

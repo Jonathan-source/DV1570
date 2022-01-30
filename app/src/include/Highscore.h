@@ -22,9 +22,9 @@ public:
 
 	}
 
-	void OnUpdate(float frameDelta) override
+	bool OnUpdate(float frameDelta) override
 	{
-
+		return true;
 	}
 
 	void OnRender() override

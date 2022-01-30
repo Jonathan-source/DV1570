@@ -19,7 +19,6 @@ public:
 private:
     StateMachine m_sceneStateMachine;
     bool m_isRunning;
-
     void SetupEngine();
 
     void SetupGameScenes();

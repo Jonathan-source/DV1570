@@ -7,22 +7,33 @@ void Game::OnEnter()
 
 void Game::OnInput()
 {
-	m_player.PlayerInput();
+	// Get ray and test against objects
+	Ray ray = GetMouseRay(GetMousePosition(), m_camera);
+	m_player.PlayerInput(ray);
+
+
+	// Toggle menu.
+	if (IsKeyPressed(KEY_ESCAPE))
+	{
+		GetStateMachine()->Change("MainMenu");
+	}
 }
 
 void Game::UpdateCamera()
 {
-	m_camera.position = Vector3Add(m_player.GetPosition(), {0,10,-5});
+	m_camera.position = Vector3Add(m_player.GetPosition(), {0, 10, -5}); // 0, 10, -5
 	m_camera.target = m_player.GetPosition();
 }
 
-void Game::OnUpdate(float frameDelta)
+bool Game::OnUpdate(float frameDelta)
 {
 	// Update Player.
 	m_player.Move(m_player.GetVelocity(), frameDelta, m_player.GetRunSpeed());
 
 	// Update Camera.
 	UpdateCamera();
+
+	return true;
 }
 
 void Game::OnRender()
@@ -37,13 +48,13 @@ void Game::OnRender()
 	EndMode3D();
 
 	DrawText("GAME!", ((float)GetScreenWidth() - 100.f), 10, 32, BLACK);
-	DrawFPS(10, 10);
 
 	EndDrawing();
 }
 
 void Game::OnExit()
 {
+
 }
 
 void Game::InitCamera()
