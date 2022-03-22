@@ -15,8 +15,8 @@ project "Application"
 
     -- Define the location(s) of files.
     files {
-        "%{wks.location}/app/include/**.h",
-		"%{wks.location}/app/source/**.cpp",
+        "%{wks.location}/app/src/include/**.h",
+		"%{wks.location}/app/src/source/**.cpp",
         "%{wks.location}/resources/scripts/**.lua",
         "%{wks.location}/tests/**.h",
 		"%{wks.location}/resources/texture/**.png",
@@ -26,30 +26,34 @@ project "Application"
 
     -- Specifies a list of include file search directories.
     includedirs {
-        "%{wks.location}/app/source/",
-        "%{wks.location}/app/include/",
+        "%{wks.location}/app/src/",
+        "%{wks.location}/app/src/include/",
+		"%{wks.location}/app/src/source/",
 		"%{wks.location}/resources/scripts/",
 		"%{wks.location}/resources/texture/",
 		"%{wks.location}/resources/mesh/",
         "%{wks.location}/tests/",
-		"%{wks.location}/libs/irrlicht/lib/x64/",
-		"%{wks.location}/libs/irrlicht/include/",
+		"%{wks.location}/libs/raylib/include/",
 		"%{wks.location}/libs/lua542/include/",
     }
     
     -- This is the place to add filters.
     vpaths {
-        ["Headers/"] = { "**.h", "**.hpp" },
-        ["Sources/"] = { "**.c", "**.cpp"},
-        ["Scripts/"] = { "**.lua"},
-        ["Tests/"] = { "LuaTests.h", "LuaTests.cpp"},
+        ["src/"] = { "**main.cpp" },
+            ["src/Application/"] = { "**Application.*" },
+            ["src/GameStates/"] = { "**StateMachine.h", "**MainMenu.*", "**Game.*", "**Highscore.*", "**Editor.*" },
+            ["src/Enitity/"] = { "**Entity.*", "**Player.*", "**Enemy.*", "**EnemyManager.*" },
+        ["src/Scripts/"] = { "**.lua"},
+        ["src/Tests/"] = { "**LuaTests.*"},
     }
 
 	links {
+        "raylib.lib",
+        "winmm.lib",
 	}
 
 	libdirs {
-		"%{wks.location}/libs/irrlicht/lib/x64/",
+		"%{wks.location}/libs/raylib/",
 	}
 
      -- Define a macro/symbol which applies on a windows system.
@@ -60,7 +64,7 @@ project "Application"
         }
         -- Specifies shell commands to run after build is finished.
 	    postbuildcommands {
-	        "{COPYFILE} %{wks.location}/resources/dlls/Irrlicht.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
+	        "{COPYFILE} %{wks.location}/resources/dlls/raylib.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
             "{COPYFILE} %{wks.location}/resources/dlls/lua54.dll %{wks.location}/build/bin/" .. outputdir .. "/Application/",
 		}
 
