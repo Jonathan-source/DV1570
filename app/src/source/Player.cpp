@@ -1,6 +1,8 @@
 #include "Player.h"
 #include <iostream>
 
+#include "BulletHandler.h"
+
 Player::Player()
 	: Entity()
 	, m_health(100)
@@ -8,6 +10,8 @@ Player::Player()
 	, m_runSpeed(5)
 	, m_velocity({0.f,0.f,0.f})
 	, m_direction({ 0.f, 0.f, })
+	, m_bulletType(Bullet::DEFAULT)
+	
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	this->m_texture = LoadTexture("../resources/textures/Steve.png");
@@ -19,7 +23,8 @@ Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
 	: Entity(position),
 	m_health(health),
 	m_attackDmg(attdmg),
-	m_runSpeed(runSpeed)
+	m_runSpeed(runSpeed),
+	m_bulletType(Bullet::DEFAULT)
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	// Tranformation matrix for rotations
@@ -46,6 +51,11 @@ float Player::GetRunSpeed() const
 Vector2 Player::GetDirection() const
 {
 	return Vector2Normalize(m_direction);
+}
+
+float Player::GetAngle() const
+{
+	return m_angle;
 }
 
 void Player::SetHealth(int health)
@@ -91,8 +101,10 @@ void Player::PlayerInput(const Ray &ray)
 	RotateWithMouse(ray);
 }
 
-void Player::Shoot()
+void Player::Shoot(BulletHandler& bulletHandler) const
 {
+	if (IsKeyDown(KEY_C))
+		bulletHandler.SpawnBullet(m_bulletType, { m_direction.x , 0.f, -m_direction.y }, this->GetPosition(), m_angle);
 }
 
 Vector3 Player::GetVelocity() const
@@ -105,9 +117,19 @@ Texture2D Player::GetTexture() const
 	return m_texture;
 }
 
+Bullet Player::GetBulletType() const
+{
+	return m_bulletType;
+}
+
 void Player::SetVelocity(const Vector3& velocity)
 {
 	this->m_velocity = velocity;
+}
+
+void Player::SetBulletType(Bullet bulletType)
+{
+	m_bulletType = bulletType;
 }
 
 void Player::RotateWithMouse(const Ray& ray)
@@ -122,6 +144,8 @@ void Player::RotateWithMouse(const Ray& ray)
 	// Check ray collision against ground quad
 	RayCollision groundHitInfo = GetRayCollisionQuad(ray, g0, g1, g2, g3);
 	m_direction = { groundHitInfo.point.z - GetPosition().z, groundHitInfo.point.x - GetPosition().x };
-	float angle = atan2f(m_direction.x, m_direction.y);
-	m_model.transform = MatrixRotateXYZ({ 0, angle, 0 });
+	m_direction = Vector2Normalize(m_direction);
+	m_angle = atan2f(m_direction.x, m_direction.y);
+	m_direction = Vector2Rotate(m_direction, DEG2RAD * -90); // i don't know why -90 degree but it works?
+	m_model.transform = MatrixRotateXYZ({ 0, m_angle, 0 });
 }

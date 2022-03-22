@@ -3,7 +3,7 @@
 #include <iostream>
 #include "Player.h"
 #include "StateMachine.h"
-
+#include "BulletHandler.h"
 
 class Game : public IState
 {
@@ -22,4 +22,5 @@ public:
 private:
 	Camera m_camera;
 	Player m_player;
+	BulletHandler m_bulletHandler;
 };

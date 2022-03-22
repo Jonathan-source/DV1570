@@ -33,9 +33,6 @@ public:
 	//Setters
 	void SetPosition(Vector3 position);
 	void SetModel(Model model);
-
-
-
 	//Functions
 	virtual void Move(Vector3 velocity, float delta, float baseSpeed = 1);
 private:

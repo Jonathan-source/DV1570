@@ -10,7 +10,7 @@ void Game::OnInput()
 	// Get ray and test against objects
 	Ray ray = GetMouseRay(GetMousePosition(), m_camera);
 	m_player.PlayerInput(ray);
-
+	m_player.Shoot(m_bulletHandler);
 
 	// Toggle menu.
 	if (IsKeyPressed(KEY_ESCAPE))
@@ -21,8 +21,6 @@ void Game::OnInput()
 
 void Game::UpdateCamera()
 {
-
-
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 
@@ -51,6 +49,9 @@ bool Game::OnUpdate(float frameDelta)
 	// Update Camera.
 	UpdateCamera();
 
+	//Update Bullets
+	m_bulletHandler.UpdateBullets();
+
 	return true;
 }
 
@@ -61,6 +62,7 @@ void Game::OnRender()
 
 	BeginMode3D(m_camera);
 	DrawModel(m_player.GetModel(), m_player.GetPosition(), 0.2f, WHITE);
+	m_bulletHandler.RenderBullets();
 	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
 	DrawGrid(10, 1.0f);
 	EndMode3D();
