@@ -1,6 +1,5 @@
 #pragma once
 
-#include <iostream>
 #include "Player.h"
 #include "StateMachine.h"
 

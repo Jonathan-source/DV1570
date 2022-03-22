@@ -1,4 +1,6 @@
+#include "pch.h"
 #include "Application.h"
+
 int main()
 {
 #if defined(_DEBUG)
