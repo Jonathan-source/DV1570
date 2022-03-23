@@ -1,9 +1,10 @@
+#include "pch.h"
 #include "MainMenu.h"
 
 MainMenu::MainMenu()
-	:m_Numframes(3),
-	mousePoint({ 0.0f,0.0f }),
-	buttonPadding(100.f)
+	: m_Numframes(3)
+	, mousePoint({ 0.0f,0.0f })
+	, buttonPadding(100.f)
 {
 }
 

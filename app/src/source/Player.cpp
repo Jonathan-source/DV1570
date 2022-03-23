@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "Player.h"
-#include <iostream>
 
 #include "BulletHandler.h"
 
@@ -20,11 +20,13 @@ Player::Player()
 }
 
 Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
-	: Entity(position),
-	m_health(health),
-	m_attackDmg(attdmg),
-	m_runSpeed(runSpeed),
-	m_bulletType(Bullet::DEFAULT)
+	: Entity(position)
+	, m_health(health)
+	, m_attackDmg(attdmg)
+	, m_runSpeed(runSpeed)
+	, m_velocity({ 0.f,0.f,0.f })
+	, m_direction({ 0.f, 0.f, })
+	, m_bulletType(Bullet::DEFAULT)
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	// Tranformation matrix for rotations

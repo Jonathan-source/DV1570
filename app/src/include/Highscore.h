@@ -1,9 +1,5 @@
 #pragma once
 
-#pragma once
-
-#include <iostream>
-
 #include "StateMachine.h"
 
 class Highscore : public IState

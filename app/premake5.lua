@@ -6,12 +6,13 @@ project "Application"
     language "C++"
     cppdialect "C++17"
     staticruntime "on"
-    --disablewarnings{"26812"}
-    --linkoptions { "-IGNORE:4075", "-IGNORE:4098", "-IGNORE:4099"}
 
     targetdir("%{wks.location}/build/bin/" .. outputdir .. "/%{prj.name}")
     objdir("%{wks.location}/build/bin-int/" .. outputdir .. "/%{prj.name}")
 
+    -- Define the location of pre-compiled header.
+    pchheader "pch.h"
+    pchsource "%{wks.location}/app/src/source/pch.cpp"
 
     -- Define the location(s) of files.
     files {
@@ -26,22 +27,22 @@ project "Application"
 
     -- Specifies a list of include file search directories.
     includedirs {
-        "%{wks.location}/app/src/",
-        "%{wks.location}/app/src/include/",
-		"%{wks.location}/app/src/source/",
-		"%{wks.location}/resources/scripts/",
-		"%{wks.location}/resources/texture/",
-		"%{wks.location}/resources/mesh/",
-        "%{wks.location}/tests/",
-		"%{wks.location}/libs/raylib/include/",
-		"%{wks.location}/libs/lua542/include/",
+        "%{wks.location}/app/src",
+        "%{wks.location}/app/src/include",
+		"%{wks.location}/app/src/source",
+		"%{wks.location}/resources/scripts",
+		"%{wks.location}/resources/texture",
+		"%{wks.location}/resources/mesh",
+        "%{wks.location}/tests",
+		"%{wks.location}/libs/raylib/include",
+		"%{wks.location}/libs/lua542/include",
     }
     
     -- This is the place to add filters.
     vpaths {
         ["src/"] = { "**main.cpp" },
-            ["src/Application/"] = { "**Application.*" },
-            ["src/GameStates/"] = { "**StateMachine.h", "**MainMenu.*", "**Game.*", "**Highscore.*", "**Editor.*" },
+            ["src/Application/"] = { "**Application.*", "**pch.*" },
+            ["src/GameStates/"] = { "**StateMachine.*", "**IState.*", "**MainMenu.*", "**Game.*", "**Highscore.*", "**Editor.*" },
             ["src/Enitity/"] = { "**Entity.*", "**Player.*", "**Enemy.*", "**EnemyManager.*" },
         ["src/Scripts/"] = { "**.lua"},
         ["src/Tests/"] = { "**LuaTests.*"},
