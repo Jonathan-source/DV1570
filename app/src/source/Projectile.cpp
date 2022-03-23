@@ -41,6 +41,11 @@ Bullet Projectile::GetBulletType() const
 	return m_bulletType;
 }
 
+float Projectile::GetBulletDamage() const
+{
+	return m_dmg;
+}
+
 float Projectile::GetBulletSpeed() const
 {
 	return m_bulletSpeed;
@@ -71,4 +76,9 @@ void Projectile::SetBulletType(Bullet bulletType)
 void Projectile::SetBulletSpeed(float speed)
 {
 	m_bulletSpeed = speed;
+}
+
+void Projectile::SetBulletDamage(float dmg)
+{
+	m_dmg = dmg;
 }

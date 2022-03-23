@@ -7,6 +7,7 @@ class BulletHandler
 {
 public:
 	BulletHandler();
+	~BulletHandler();
 	void SpawnBullet(Bullet bulletType, Vector3 direction, Vector3 spawnPosition, float angle);
 	void UpdateBullets();
 	void RenderBullets() const;

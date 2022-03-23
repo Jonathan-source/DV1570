@@ -7,14 +7,23 @@ BulletHandler::BulletHandler()
 	//m_bulletModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_bulletTexture;
 }
 
+BulletHandler::~BulletHandler()
+{
+	for (const auto bullet : m_bullets)
+	{
+		delete bullet;
+	}
+	UnloadModel(m_bulletModel);
+}
+
 void BulletHandler::SpawnBullet(Bullet bulletType, Vector3 direction, Vector3 spawnPosition, float angle)
 {
 	switch (bulletType)
 	{
 	case Bullet::DEFAULT: 
 	{
-		auto projectile = new Projectile(spawnPosition, direction, true, 10.f);
-		projectile->SetBulletSpeed(10.f);
+		auto projectile = new Projectile(Vector3Add(spawnPosition, {0,1,0}), direction, true, 3.f);
+		projectile->SetBulletSpeed(20.f);
 		m_bulletModel.transform = m_bulletModel.transform = MatrixRotateXYZ({ 0, angle, 0 });
 		
 		projectile->SetModel(m_bulletModel);
@@ -33,7 +42,7 @@ void BulletHandler::SpawnBullet(Bullet bulletType, Vector3 direction, Vector3 sp
 void BulletHandler::UpdateBullets()
 {
 	// Move Bullets
-	for (auto bullet : m_bullets)
+	for (const auto bullet : m_bullets)
 	{
 		bullet->Move(bullet->GetVelocity(), GetFrameTime(), bullet->GetBulletSpeed());
 		bullet->SetLifeSpawn(bullet->GetLifeSpawn() - GetFrameTime());
@@ -44,6 +53,7 @@ void BulletHandler::UpdateBullets()
 	{
 		if (m_bullets.back()->GetLifeSpawn() <= 0.01f)
 		{
+			delete m_bullets.back();
 			m_bullets.pop_back();
 		}
 		else
@@ -54,7 +64,7 @@ void BulletHandler::UpdateBullets()
 
 void BulletHandler::RenderBullets() const
 {
-	for (auto bullet : m_bullets)
+	for (const auto bullet : m_bullets)
 	{
 		DrawModel(bullet->GetModel(),bullet->GetPosition(),1, WHITE);
 	}

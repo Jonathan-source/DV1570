@@ -15,19 +15,22 @@ public:
 	[[nodiscard]] float GetLifeSpawn() const;
 	[[nodiscard]] bool GetIsActive() const;
 	[[nodiscard]] Bullet GetBulletType() const;
-	float GetBulletSpeed() const;
+	[[nodiscard]] float GetBulletDamage() const;
+	[[nodiscard]] float GetBulletSpeed() const;
 	//Setters
 	void SetVelocity(Vector3 velocity);
 	void SetLifeSpawn(float lifeSpawn);
 	void SetIsActive(bool condition);
 	void SetBulletType(Bullet bulletType);
 	void SetBulletSpeed(float speed);
+	void SetBulletDamage(float dmg);
 private:
 	//Data
 	Vector3 m_velocity;
 	bool m_isActive;
 	float m_lifeSpawn;
 	float m_bulletSpeed;
+	float m_dmg;
 	Bullet m_bulletType;
 };
 
