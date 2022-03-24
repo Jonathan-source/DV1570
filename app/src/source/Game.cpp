@@ -46,7 +46,7 @@ bool Game::OnUpdate(float frameDelta)
 {
 	// Update Player.
 	m_player.Move(m_player.GetVelocity(), frameDelta, m_player.GetRunSpeed());
-
+	m_player.Update();
 	// Update Camera.
 	UpdateCamera();
 

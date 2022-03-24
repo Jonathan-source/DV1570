@@ -30,8 +30,8 @@ public:
 
 	//Functions
 	void PlayerInput(const Ray &ray);
-	void Shoot(BulletHandler& bulletHandler) const;
-
+	void Shoot(BulletHandler& bulletHandler);
+	void Update();
 	[[nodiscard]] Vector3 GetVelocity() const;
 	[[nodiscard]] Texture2D GetTexture() const;
 	[[nodiscard]] Bullet GetBulletType() const;
@@ -41,10 +41,12 @@ private:
 	int m_health;
 	int m_attackDmg;
 	float m_runSpeed;
-	float m_angle;
+	float m_angle{};
+	float m_shootTimer;
+	float m_shootCooldown;
 	Vector3 m_velocity;
 	Vector2 m_direction;
-	Texture2D m_texture;
+	Texture2D m_texture{};
 	Bullet m_bulletType;
 	void RotateWithMouse(const Ray& ray);
 };

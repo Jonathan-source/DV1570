@@ -1,23 +1,25 @@
+#include "pch.h"
 #include "Projectile.h"
 
 Projectile::Projectile()
-	:Entity(),
-	m_velocity({ 0, 0, 0 }),
-	m_isActive(false),
-	m_lifeSpawn(0),
-	m_bulletSpeed(1),
-	m_bulletType(Bullet::DEFAULT)
+	: Entity(),
+	  m_isActive(false),
+	  m_dmg(0),
+	  m_lifeSpawn(0),
+	  m_bulletSpeed(1),
+      m_bulletType(Bullet::DEFAULT),
+	  m_velocity({0, 0, 0})
 {
 }
 
 Projectile::Projectile(Vector3 position, Vector3 velocity, bool isActive, float lifeSpawn)
-	:Entity(position),
-	m_velocity(velocity),
-	m_isActive(isActive),
-	m_lifeSpawn(lifeSpawn),
-	m_bulletSpeed(1),
-	m_bulletType(Bullet::DEFAULT)
-
+	: Entity(position),
+	  m_isActive(isActive),
+	  m_dmg(1),
+	  m_lifeSpawn(lifeSpawn),
+	  m_bulletSpeed(1),
+      m_bulletType(Bullet::DEFAULT),
+	  m_velocity(velocity)
 {
 }
 

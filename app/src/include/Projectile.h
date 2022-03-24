@@ -11,26 +11,26 @@ public:
 	Projectile();
 	Projectile(Vector3 position, Vector3 velocity, bool isActive, float lifeSpawn);
 	//Getters
-	[[nodiscard]] Vector3 GetVelocity() const;
-	[[nodiscard]] float GetLifeSpawn() const;
 	[[nodiscard]] bool GetIsActive() const;
+	[[nodiscard]] float GetLifeSpawn() const;
+	[[nodiscard]] Vector3 GetVelocity() const;
 	[[nodiscard]] Bullet GetBulletType() const;
-	[[nodiscard]] float GetBulletDamage() const;
 	[[nodiscard]] float GetBulletSpeed() const;
+	[[nodiscard]] float GetBulletDamage() const;
 	//Setters
 	void SetVelocity(Vector3 velocity);
-	void SetLifeSpawn(float lifeSpawn);
 	void SetIsActive(bool condition);
+	void SetLifeSpawn(float lifeSpawn);
 	void SetBulletType(Bullet bulletType);
 	void SetBulletSpeed(float speed);
 	void SetBulletDamage(float dmg);
 private:
 	//Data
-	Vector3 m_velocity;
 	bool m_isActive;
+	float m_dmg;
 	float m_lifeSpawn;
 	float m_bulletSpeed;
-	float m_dmg;
 	Bullet m_bulletType;
+	Vector3 m_velocity;
 };
 

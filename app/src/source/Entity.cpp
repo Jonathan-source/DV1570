@@ -21,6 +21,11 @@ Model Entity::GetModel() const
 	return this->m_model;
 }
 
+BoundingBox Entity::GetBoundingBox() const
+{
+	return m_boundingBox;
+}
+
 void Entity::SetPosition(Vector3 position)
 {
 	m_position = position;
@@ -29,6 +34,11 @@ void Entity::SetPosition(Vector3 position)
 void Entity::SetModel(Model model)
 {
 	m_model = model;
+}
+
+void Entity::SetBoundingBox(BoundingBox boundingBox)
+{
+	m_boundingBox = boundingBox;
 }
 
 void Entity::Move(Vector3 velocity, float delta, float baseSpeed)

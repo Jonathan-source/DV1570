@@ -1,8 +1,10 @@
+#include "pch.h"
 #include "BulletHandler.h"
 
 BulletHandler::BulletHandler()
 {
 	m_bulletModel = LoadModel("../resources/meshes/bullet.obj");
+	m_bulletBounds = GetMeshBoundingBox(m_bulletModel.meshes[0]);
 	//m_bulletTexture = LoadTexture("../resources/textures/Steve.png");
 	//m_bulletModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_bulletTexture;
 }
@@ -27,13 +29,14 @@ void BulletHandler::SpawnBullet(Bullet bulletType, Vector3 direction, Vector3 sp
 		m_bulletModel.transform = m_bulletModel.transform = MatrixRotateXYZ({ 0, angle, 0 });
 		
 		projectile->SetModel(m_bulletModel);
+		projectile->SetBoundingBox(m_bulletBounds);
 		m_bullets.emplace_back(projectile);
 	}
 		break;
-	case Bullet::TYPE1:
-		break;
-	case Bullet::TYPE2:
-		break;
+	//case Bullet::TYPE1:
+	//	break;
+	//case Bullet::TYPE2:
+	//	break;
 	default:
 		break;
 	}
@@ -67,5 +70,6 @@ void BulletHandler::RenderBullets() const
 	for (const auto bullet : m_bullets)
 	{
 		DrawModel(bullet->GetModel(),bullet->GetPosition(),1, WHITE);
+		DrawBoundingBox(bullet->GetBoundingBox(), GREEN);
 	}
 }

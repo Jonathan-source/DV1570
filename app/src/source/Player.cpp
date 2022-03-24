@@ -8,10 +8,12 @@ Player::Player()
 	, m_health(100)
 	, m_attackDmg(1)
 	, m_runSpeed(5)
-	, m_velocity({0.f,0.f,0.f})
-	, m_direction({ 0.f, 0.f, })
+	, m_shootTimer(0.0f)
+	, m_shootCooldown(0.25f)
+	, m_velocity({0.f, 0.f, 0.f})
+	, m_direction({0.f, 0.f,})
 	, m_bulletType(Bullet::DEFAULT)
-	
+
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	this->m_texture = LoadTexture("../resources/textures/Steve.png");
@@ -24,8 +26,10 @@ Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
 	, m_health(health)
 	, m_attackDmg(attdmg)
 	, m_runSpeed(runSpeed)
-	, m_velocity({ 0.f,0.f,0.f })
-	, m_direction({ 0.f, 0.f, })
+	, m_shootTimer(0.0f)
+	, m_shootCooldown(0.25f)
+	, m_velocity({0.f, 0.f, 0.f})
+	, m_direction({0.f, 0.f,})
 	, m_bulletType(Bullet::DEFAULT)
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
@@ -103,10 +107,22 @@ void Player::PlayerInput(const Ray &ray)
 	RotateWithMouse(ray);
 }
 
-void Player::Shoot(BulletHandler& bulletHandler) const
+void Player::Shoot(BulletHandler& bulletHandler)
 {
-	if (IsKeyDown(KEY_C))
+
+	if (IsKeyDown(KEY_C) && m_shootTimer < 0.01f)
+	{
+		// spawn bullet
 		bulletHandler.SpawnBullet(m_bulletType, { m_direction.x , 0.f, -m_direction.y }, this->GetPosition(), m_angle);
+		// reset timer
+		m_shootTimer = m_shootCooldown;
+	}
+		
+}
+
+void Player::Update()
+{
+	m_shootTimer -= GetFrameTime();
 }
 
 Vector3 Player::GetVelocity() const
@@ -132,19 +148,32 @@ void Player::SetVelocity(const Vector3& velocity)
 void Player::SetBulletType(Bullet bulletType)
 {
 	m_bulletType = bulletType;
+
+	switch (m_bulletType)
+	{
+	case Bullet::DEFAULT:
+		m_shootCooldown = 0.25f;
+		break;
+	case Bullet::TYPE1:
+		m_shootCooldown = 0.15f;
+		break;
+	case Bullet::TYPE2:
+		m_shootCooldown = 0.10f;
+		break;
+	}
 }
 
 void Player::RotateWithMouse(const Ray& ray)
 {
 	// Ground quad
-	const float SIZE = 1000.f;
-	Vector3 g0 = { -SIZE, 0.0f, -SIZE };
-	Vector3 g1 = { -SIZE, 0.0f, SIZE };
-	Vector3 g2 = { SIZE, 0.0f, SIZE };
-	Vector3 g3 = { SIZE, 0.0f, -SIZE };
+	constexpr float SIZE = 1000.f;
+	constexpr Vector3 g0 = { -SIZE, 0.0f, -SIZE };
+	constexpr Vector3 g1 = { -SIZE, 0.0f, SIZE };
+	constexpr Vector3 g2 = { SIZE, 0.0f, SIZE };
+	constexpr Vector3 g3 = { SIZE, 0.0f, -SIZE };
 
 	// Check ray collision against ground quad
-	RayCollision groundHitInfo = GetRayCollisionQuad(ray, g0, g1, g2, g3);
+	const RayCollision groundHitInfo = GetRayCollisionQuad(ray, g0, g1, g2, g3);
 	m_direction = { groundHitInfo.point.z - GetPosition().z, groundHitInfo.point.x - GetPosition().x };
 	m_direction = Vector2Normalize(m_direction);
 	m_angle = atan2f(m_direction.x, m_direction.y);
