@@ -40,6 +40,7 @@ extern "C"
 #include <algorithm>
 #include <cmath>
 #include <functional>
+#include <math.h>
 
 
 // Macros

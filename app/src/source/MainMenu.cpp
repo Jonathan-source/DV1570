@@ -83,6 +83,7 @@ bool MainMenu::OnUpdate(float frameDelta)
 	else if(editorBtnAction)
 	{
 		PlaySound(fxButton);
+		GetStateMachine()->Change("Editor");
 	}
 	else if (highscoreBtnAction)
 	{
