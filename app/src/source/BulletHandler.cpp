@@ -71,4 +71,7 @@ void BulletHandler::RenderBullets() const
 	{
 		DrawModel(bullet->GetModel(),bullet->GetPosition(),1, WHITE);
 	}
+
+	BoundingBox bounding;
+	
 }

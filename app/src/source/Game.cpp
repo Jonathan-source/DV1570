@@ -4,6 +4,7 @@
 void Game::OnEnter()
 {
 	InitCamera();
+	m_enemy.SetPlayerTarget(&m_player);
 }
 
 void Game::OnInput()
@@ -47,7 +48,9 @@ bool Game::OnUpdate(float frameDelta)
 	// Update Player.
 	m_player.Move(m_player.GetVelocity(), frameDelta, m_player.GetRunSpeed());
 	m_player.Update();
-
+	// Update enemy
+	m_enemy.Update();
+	m_enemy.Move(m_enemy.GetVelocity(), frameDelta, m_enemy.GetRunSpeed());
 	// Update Camera.
 	UpdateCamera();
 
@@ -63,8 +66,9 @@ void Game::OnRender()
 	ClearBackground(RAYWHITE);
 
 	BeginMode3D(m_camera);
-	DrawModel(m_player.GetModel(), m_player.GetPosition(), 0.2f, WHITE);
+	DrawModel(m_player.GetModel(), m_player.GetPosition(), 1.0f, WHITE);
 	m_bulletHandler.RenderBullets();
+	DrawModel(m_enemy.GetModel(), m_enemy.GetPosition(), 1.0f, WHITE);
 	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
 	DrawGrid(10, 1.0f);
 	EndMode3D();

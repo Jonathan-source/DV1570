@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "StateMachine.h"
 #include "BulletHandler.h"
+#include "Enemy.h"
 
 class Game : public IState
 {
@@ -21,5 +22,6 @@ public:
 private:
 	Camera m_camera;
 	Player m_player;
+	Enemy m_enemy;
 	BulletHandler m_bulletHandler;
 };

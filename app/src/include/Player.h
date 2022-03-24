@@ -36,7 +36,6 @@ public:
 	[[nodiscard]] Texture2D GetTexture() const;
 	[[nodiscard]] Bullet GetBulletType() const;
 
-
 private:
 	int m_health;
 	int m_attackDmg;
