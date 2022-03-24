@@ -70,6 +70,5 @@ void BulletHandler::RenderBullets() const
 	for (const auto bullet : m_bullets)
 	{
 		DrawModel(bullet->GetModel(),bullet->GetPosition(),1, WHITE);
-		DrawBoundingBox(bullet->GetBoundingBox(), GREEN);
 	}
 }
