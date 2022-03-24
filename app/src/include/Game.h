@@ -21,4 +21,5 @@ public:
 private:
 	Camera m_camera;
 	Player m_player;
+
 };

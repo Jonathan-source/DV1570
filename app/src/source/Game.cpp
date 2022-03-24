@@ -22,8 +22,6 @@ void Game::OnInput()
 
 void Game::UpdateCamera()
 {
-
-
 	lua_State* L = luaL_newstate();
 	luaL_openlibs(L);
 
@@ -62,11 +60,8 @@ void Game::OnRender()
 
 	BeginMode3D(m_camera);
 	DrawModel(m_player.GetModel(), m_player.GetPosition(), 0.2f, WHITE);
-	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
-	DrawGrid(10, 1.0f);
+	DrawGrid(100, 1.0f);
 	EndMode3D();
-
-	DrawText("GAME!", ((float)GetScreenWidth() - 100.f), 10, 32, BLACK);
 
 	EndDrawing();
 }
@@ -101,3 +96,5 @@ void Game::InitCamera()
 
 	lua_close(L);
 }
+
+
