@@ -4,7 +4,14 @@
 void Game::OnEnter()
 {
 	InitCamera();
-	m_enemy.SetPlayerTarget(&m_player);
+	m_enemyManager.AddSpawnPoint({ 5,0,5 });
+	m_enemyManager.AddSpawnPoint({ -5,0,5 });
+	m_enemyManager.AddSpawnPoint({ 5,0,-5 });
+	m_enemyManager.AddSpawnPoint({ -5,0,-5 });
+
+	for(int i = 0;i < 10; i++)
+		m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player);
+	//m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player);
 }
 
 void Game::OnInput()
@@ -48,12 +55,10 @@ bool Game::OnUpdate(float frameDelta)
 	// Update Player.
 	m_player.Move(m_player.GetVelocity(), frameDelta, m_player.GetRunSpeed());
 	m_player.Update();
-	// Update enemy
-	m_enemy.Update();
-	m_enemy.Move(m_enemy.GetVelocity(), frameDelta, m_enemy.GetRunSpeed());
+	// Update enemies
+	m_enemyManager.UpdateEnemies();
 	// Update Camera.
 	UpdateCamera();
-
 	//Update Bullets
 	m_bulletHandler.UpdateBullets();
 
@@ -68,7 +73,7 @@ void Game::OnRender()
 	BeginMode3D(m_camera);
 	DrawModel(m_player.GetModel(), m_player.GetPosition(), 1.0f, WHITE);
 	m_bulletHandler.RenderBullets();
-	DrawModel(m_enemy.GetModel(), m_enemy.GetPosition(), 1.0f, WHITE);
+	m_enemyManager.RenderEnemies();
 	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
 	DrawGrid(10, 1.0f);
 	EndMode3D();

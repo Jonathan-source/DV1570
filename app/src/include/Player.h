@@ -19,6 +19,9 @@ public:
 	[[nodiscard]] float GetRunSpeed() const;
 	[[nodiscard]] Vector2 GetDirection() const;
 	[[nodiscard]] float GetAngle() const;
+	[[nodiscard]] Vector3 GetVelocity() const;
+	[[nodiscard]] Texture2D GetTexture() const;
+	[[nodiscard]] Bullet GetBulletType() const;
 
 	//Setters
 	void SetHealth(int health);
@@ -31,10 +34,9 @@ public:
 	//Functions
 	void PlayerInput(const Ray &ray);
 	void Shoot(BulletHandler& bulletHandler);
+	void TakeDamage(int damage);
 	void Update();
-	[[nodiscard]] Vector3 GetVelocity() const;
-	[[nodiscard]] Texture2D GetTexture() const;
-	[[nodiscard]] Bullet GetBulletType() const;
+
 
 private:
 	int m_health;

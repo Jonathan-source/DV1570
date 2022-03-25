@@ -6,13 +6,14 @@ Enemy::Enemy()
 	: Entity()
 	, m_health(100)
 	, m_attackDmg(1)
-	, m_runSpeed(1)
 	, m_velocity({ 0.f, 0.f, 0.f })
 	, m_direction({ 0.f, 0.f, })
 {
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
+
+	m_runSpeed = (1.f + static_cast<float>((rand() % 5) / 10.f));
 }
 
 Enemy::Enemy(Player* playerTarget)

@@ -120,6 +120,11 @@ void Player::Shoot(BulletHandler& bulletHandler)
 		
 }
 
+void Player::TakeDamage(const int damage)
+{
+	m_health -= damage;
+}
+
 void Player::Update()
 {
 	m_shootTimer -= GetFrameTime();
