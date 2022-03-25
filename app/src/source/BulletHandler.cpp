@@ -18,6 +18,11 @@ BulletHandler::~BulletHandler()
 	UnloadModel(m_bulletModel);
 }
 
+std::vector<Projectile*>& BulletHandler::GetBullets()
+{
+	return m_bullets;
+}
+
 void BulletHandler::SpawnBullet(Bullet bulletType, Vector3 direction, Vector3 spawnPosition, float angle)
 {
 	switch (bulletType)
@@ -54,7 +59,7 @@ void BulletHandler::UpdateBullets()
 	bool hasDeadBullets = true;
 	while(hasDeadBullets && !m_bullets.empty())
 	{
-		if (m_bullets.back()->GetLifeSpawn() <= 0.01f)
+		if (m_bullets.back()->GetLifeSpawn() <= 0.01f || !m_bullets.back()->GetIsActive())
 		{
 			delete m_bullets.back();
 			m_bullets.pop_back();
@@ -69,7 +74,8 @@ void BulletHandler::RenderBullets() const
 {
 	for (const auto bullet : m_bullets)
 	{
-		DrawModel(bullet->GetModel(),bullet->GetPosition(),1, WHITE);
+		if(bullet->GetIsActive())
+			DrawModel(bullet->GetModel(),bullet->GetPosition(),1, WHITE);
 	}
 	
 }

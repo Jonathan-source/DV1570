@@ -15,6 +15,7 @@ public:
 	[[nodiscard]] Vector2 GetDirection() const;
 	[[nodiscard]] Vector3 GetVelocity() const;
 	[[nodiscard]] Texture2D GetTexture() const;
+	[[nodiscard]] BoundingBox GetBoundingBox() const;
 
 	//Setters
 	void SetHealth(int health);
@@ -23,14 +24,17 @@ public:
 	void SetTexture(Texture2D texture);
 	void SetVelocity(const Vector3& velocity);
 	void SetPlayerTarget(Player* playerTarget);
+	void SetBoundingBox(BoundingBox boundingBox);
 
 	//Functions
 	void Update();
+	void TakeDamage(int damage);
 
 private:
 	int m_health;
 	int m_attackDmg;
 	float m_runSpeed;
+	BoundingBox m_boundingBox;
 	Vector3 m_velocity;
 	Vector2 m_direction;
 	Texture2D m_texture{};

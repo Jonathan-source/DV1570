@@ -12,7 +12,7 @@ Enemy::Enemy()
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
-
+	m_boundingBox = GetMeshBoundingBox(m_model.meshes[0]);
 	m_runSpeed = (1.f + static_cast<float>((rand() % 5) / 10.f));
 }
 
@@ -28,6 +28,7 @@ Enemy::Enemy(Player* playerTarget)
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
+	m_boundingBox = GetMeshBoundingBox(m_model.meshes[0]);
 }
 
 
@@ -84,6 +85,11 @@ void Enemy::SetPlayerTarget(Player* playerTarget)
 	m_playerTarget = playerTarget;
 }
 
+void Enemy::SetBoundingBox(BoundingBox boundingBox)
+{
+	m_boundingBox = boundingBox;
+}
+
 void Enemy::Update()
 {
 	// Set direction towards player target
@@ -96,6 +102,11 @@ void Enemy::Update()
 	m_model.transform = MatrixRotateXYZ({ 0, angle, 0 });
 }
 
+void Enemy::TakeDamage(int damage)
+{
+	m_health -= damage;
+}
+
 
 Vector3 Enemy::GetVelocity() const
 {
@@ -105,4 +116,9 @@ Vector3 Enemy::GetVelocity() const
 Texture2D Enemy::GetTexture() const
 {
 	return m_texture;
+}
+
+BoundingBox Enemy::GetBoundingBox() const
+{
+	return m_boundingBox;
 }

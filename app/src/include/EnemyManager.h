@@ -11,15 +11,15 @@ public:
 	// Deconstructor
 	~EnemyManager() = default;
 	// Getters
-	std::vector<Enemy>& GetEnemies() const;
-	std::vector<Vector3>& GetSpawnPoints() const;
+	[[nodiscard]] std::vector<Enemy*>& GetEnemies();
+	[[nodiscard]] std::vector<Vector3>& GetSpawnPoints();
 
 	// Setters 
 
 	// Functions
 	void AddSpawnPoint(Vector3 spawnPoint);
 	void SpawnEnemy(EnemyType enemyType, Player* playerTarget);
-	void UpdateEnemies() const;
+	void UpdateEnemies() ;
 	void RenderEnemies() const;
 
 

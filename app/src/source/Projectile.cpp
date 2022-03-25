@@ -4,7 +4,7 @@
 Projectile::Projectile()
 	: Entity(),
 	  m_isActive(false),
-	  m_dmg(0),
+	  m_dmg(100),
 	  m_lifeSpawn(0),
 	  m_bulletSpeed(1),
       m_bulletType(Bullet::DEFAULT),
@@ -15,7 +15,7 @@ Projectile::Projectile()
 Projectile::Projectile(Vector3 position, Vector3 velocity, bool isActive, float lifeSpawn)
 	: Entity(position),
 	  m_isActive(isActive),
-	  m_dmg(1),
+	  m_dmg(100),
 	  m_lifeSpawn(lifeSpawn),
 	  m_bulletSpeed(1),
       m_bulletType(Bullet::DEFAULT),
@@ -43,7 +43,7 @@ Bullet Projectile::GetBulletType() const
 	return m_bulletType;
 }
 
-float Projectile::GetBulletDamage() const
+int Projectile::GetBulletDamage() const
 {
 	return m_dmg;
 }

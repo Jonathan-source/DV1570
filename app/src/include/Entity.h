@@ -18,7 +18,7 @@ public:
 	//Setters
 	void SetPosition(Vector3 position);
 	void SetModel(Model model);
-	void SetBoundingBox(BoundingBox boundingBox);
+	virtual void SetBoundingBox(BoundingBox boundingBox);
 	//Functions
 	virtual void Move(Vector3 velocity, float delta, float baseSpeed = 1);
 private:

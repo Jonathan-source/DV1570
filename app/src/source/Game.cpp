@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Game.h"
 
+#include "CollisionHandler.h"
+
 void Game::OnEnter()
 {
 	InitCamera();
@@ -61,6 +63,8 @@ bool Game::OnUpdate(float frameDelta)
 	UpdateCamera();
 	//Update Bullets
 	m_bulletHandler.UpdateBullets();
+
+	CollisionHandler::CheckBulletEnemy(m_enemyManager.GetEnemies(), m_bulletHandler.GetBullets());
 
 	return true;
 }

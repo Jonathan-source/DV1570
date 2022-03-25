@@ -16,7 +16,7 @@ public:
 	[[nodiscard]] Vector3 GetVelocity() const;
 	[[nodiscard]] Bullet GetBulletType() const;
 	[[nodiscard]] float GetBulletSpeed() const;
-	[[nodiscard]] float GetBulletDamage() const;
+	[[nodiscard]] int GetBulletDamage() const;
 	//Setters
 	void SetVelocity(Vector3 velocity);
 	void SetIsActive(bool condition);
