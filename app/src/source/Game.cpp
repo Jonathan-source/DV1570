@@ -122,8 +122,6 @@ void Game::OnRender()
 	DrawGrid(10, 1.0f);
 	EndMode3D();
 
-	DrawText("GAME!", ((float)GetScreenWidth() - 100.f), 10, 32, BLACK);
-
 	EndDrawing();
 }
 
@@ -157,3 +155,5 @@ void Game::InitCamera()
 
 	lua_close(L);
 }
+
+
