@@ -2,6 +2,8 @@
 
 #include "Enemy.h"
 
+#include "PathFinderManager.h"
+
 Enemy::Enemy()
 	: Entity()
 	, m_health(100)
@@ -90,14 +92,32 @@ void Enemy::SetBoundingBox(BoundingBox boundingBox)
 	m_boundingBox = boundingBox;
 }
 
+void Enemy::SetGrid(const std::vector<std::vector<Node*>>& grid)
+{
+	m_grid = grid;
+}
+
 void Enemy::Update()
 {
-	// Set direction towards player target
-	m_direction = {  m_playerTarget->GetPosition().z - GetPosition().z,  m_playerTarget->GetPosition().x - GetPosition().x};
+	// Set direction towards the node player is closest
+	Node* closestNode = PathFinderManager::GetClosestNode(GetPosition(), m_grid);
+	path = PathFinderManager::AStar(closestNode, PathFinderManager::GetClosestNode(m_playerTarget->GetPosition(), m_grid));
+
+	if (!path.empty())
+	{
+		m_direction = { path.back()->position.z - closestNode->position.z,  path.back()->position.x - closestNode->position.x };
+	}
+	else
+	{
+		m_direction = { 0,0 };
+		m_velocity = { 0, 0.0, 0};
+		return;
+	}
+
 	m_direction = Vector2Normalize(m_direction);
 	m_velocity = { m_direction.y, 0.0, m_direction.x };
 
-	// Rotate towards player target
+	// Rotate towards target
 	float angle = atan2f(m_direction.x, m_direction.y);
 	m_model.transform = MatrixRotateXYZ({ 0, angle, 0 });
 }

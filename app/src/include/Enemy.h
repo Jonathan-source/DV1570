@@ -1,6 +1,8 @@
 #pragma once
 #include "Player.h"
 
+struct Node;
+
 class Enemy : public Entity 
 {
 public:
@@ -25,6 +27,7 @@ public:
 	void SetVelocity(const Vector3& velocity);
 	void SetPlayerTarget(Player* playerTarget);
 	void SetBoundingBox(BoundingBox boundingBox);
+	void SetGrid(const std::vector<std::vector<Node*>>& grid);
 
 	//Functions
 	void Update();
@@ -39,5 +42,8 @@ private:
 	Vector2 m_direction;
 	Texture2D m_texture{};
 	Player* m_playerTarget;
+
+	std::vector<Node*> path;
+	std::vector<std::vector<Node*>> m_grid;
 };
 

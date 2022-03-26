@@ -7,6 +7,14 @@ EnemyManager::EnemyManager()
 
 }
 
+EnemyManager::~EnemyManager()
+{
+	for (auto enemy : m_enemies)
+	{
+		delete enemy;
+	}
+}
+
 std::vector<Enemy*>& EnemyManager::GetEnemies()
 {
 	return m_enemies;
@@ -22,7 +30,7 @@ void EnemyManager::AddSpawnPoint(Vector3 spawnPoint)
 	m_spawnPoints.push_back(spawnPoint);
 }
 
-void EnemyManager::SpawnEnemy(EnemyType enemyType, Player* playerTarget)
+void EnemyManager::SpawnEnemy(EnemyType enemyType, Player* playerTarget, const std::vector<std::vector<Node*>>& grid)
 {
 
 	switch (enemyType)
@@ -33,6 +41,7 @@ void EnemyManager::SpawnEnemy(EnemyType enemyType, Player* playerTarget)
 			currentSpawnIndex = ++currentSpawnIndex % m_spawnPoints.size();
 			enemy->SetPosition(m_spawnPoints[currentSpawnIndex]);
 			enemy->SetPlayerTarget(playerTarget);
+			enemy->SetGrid(grid);
 			m_enemies.push_back(enemy);
 		}
 		break;

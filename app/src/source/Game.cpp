@@ -3,17 +3,33 @@
 
 #include "CollisionHandler.h"
 
+
+Game::~Game()
+{
+	for (const auto& nodeVec : m_grid)
+	{
+		for (auto node : nodeVec)
+		{
+			delete node;
+		}
+	}
+}
+
 void Game::OnEnter()
 {
 	InitCamera();
 	m_enemyManager.AddSpawnPoint({ 5,0,5 });
-	m_enemyManager.AddSpawnPoint({ -5,0,5 });
-	m_enemyManager.AddSpawnPoint({ 5,0,-5 });
-	m_enemyManager.AddSpawnPoint({ -5,0,-5 });
+	m_enemyManager.AddSpawnPoint({ 15,0,5 });
+	m_enemyManager.AddSpawnPoint({ 5,0,15 });
+	m_enemyManager.AddSpawnPoint({ 15,0,15 });
 
-	for(int i = 0;i < 10; i++)
-		m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player);
-	//m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player);
+	// init grid
+	m_grid = PathFinderManager::InitializeGrid(50,1);
+
+	// init enemies
+	for (int i = 0; i < 10; i++)
+		m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player, m_grid);
+
 }
 
 void Game::OnInput()
@@ -69,6 +85,17 @@ bool Game::OnUpdate(float frameDelta)
 	return true;
 }
 
+void Game::RenderGrid()
+{
+	for(int i = 0; i < m_grid.size(); i++)
+	{
+		for(int j = 0;j<m_grid.size(); j++)
+		{
+			DrawCube(m_grid.at(i).at(j)->position, 0.2f, 0.2f, 0.2f, RED);
+		}
+	}
+}
+
 void Game::OnRender()
 {
 	BeginDrawing();
@@ -78,6 +105,7 @@ void Game::OnRender()
 	DrawModel(m_player.GetModel(), m_player.GetPosition(), 1.0f, WHITE);
 	m_bulletHandler.RenderBullets();
 	m_enemyManager.RenderEnemies();
+	RenderGrid();
 	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
 	DrawGrid(10, 1.0f);
 	EndMode3D();

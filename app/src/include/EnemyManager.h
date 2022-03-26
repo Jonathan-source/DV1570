@@ -9,7 +9,7 @@ public:
 	// Constructor
 	EnemyManager();
 	// Deconstructor
-	~EnemyManager() = default;
+	~EnemyManager();
 	// Getters
 	[[nodiscard]] std::vector<Enemy*>& GetEnemies();
 	[[nodiscard]] std::vector<Vector3>& GetSpawnPoints();
@@ -18,7 +18,7 @@ public:
 
 	// Functions
 	void AddSpawnPoint(Vector3 spawnPoint);
-	void SpawnEnemy(EnemyType enemyType, Player* playerTarget);
+	void SpawnEnemy(EnemyType enemyType, Player* playerTarget, const std::vector<std::vector<Node*>>& grid);
 	void UpdateEnemies() ;
 	void RenderEnemies() const;
 
