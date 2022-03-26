@@ -1,6 +1,20 @@
 #include "pch.h"
 #include "PathFinderManager.h"
 
+void PathFinderManager::UpdateConnections(std::vector<std::vector<Node*>>& grid)
+{
+	// Set up connections
+	for (int i = 0; i < static_cast<int>(grid.size()); i++)
+	{
+
+		for (int j = 0; j < static_cast<int>(grid.size()); j++)
+		{
+			if(grid.at(i).at(j)->reachable)
+				grid.at(i).at(j)->connections = GetNeighbors(grid.at(i).at(j), grid);
+		}
+	}
+}
+
 std::vector<std::vector<Node*>> PathFinderManager::InitializeGrid(int size, int spacing = 1)
 {
 	std::vector<std::vector<Node*>> grid;
@@ -16,16 +30,7 @@ std::vector<std::vector<Node*>> PathFinderManager::InitializeGrid(int size, int 
 		}
 	}
 
-	// Set up connections
-
-	for (int i = 0; i < size; i++)
-	{
-
-		for (int j = 0; j < size; j++)
-		{
-			grid.at(i).at(j)->connections = GetNeighbors(grid.at(i).at(j), grid);
-		}
-	}
+	UpdateConnections(grid);
 
 	return grid;
 }
@@ -33,7 +38,7 @@ std::vector<std::vector<Node*>> PathFinderManager::InitializeGrid(int size, int 
 std::vector<Node*> PathFinderManager::AStar(Node* startNode, Node* goalNode)
 {
 	std::vector<Node*> openList, closedList, generatedPath;
-	if(startNode == nullptr || goalNode == nullptr)
+	if(startNode == nullptr || goalNode == nullptr || !startNode->reachable || !goalNode->reachable)
 	{
 		std::cout << "Error in PathFinderManager::AStar(StartNode or GoalNode is null)" << std::endl;
 		return generatedPath;
@@ -96,7 +101,7 @@ std::vector<Node*> PathFinderManager::AStar(Node* startNode, Node* goalNode)
 			const float hNew = Vector3Distance(goalNode->position, neighbor->position);
 			const float fNew = gNew + hNew;
 
-			if (gNew < currentNode->g || !IsInVector(openList, neighbor))
+			if (neighbor->reachable && gNew < currentNode->g || !IsInVector(openList, neighbor))
 			{
 				neighbor->g = gNew;
 				neighbor->h = hNew;

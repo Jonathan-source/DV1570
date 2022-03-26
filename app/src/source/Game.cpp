@@ -26,6 +26,15 @@ void Game::OnEnter()
 	// init grid
 	m_grid = PathFinderManager::InitializeGrid(50,1);
 
+	m_grid[3][3]->reachable = false;
+	m_grid[3][4]->reachable = false;
+	m_grid[3][5]->reachable = false;
+	m_grid[2][3]->reachable = false;
+	m_grid[2][4]->reachable = false;
+	m_grid[2][5]->reachable = false;
+
+	PathFinderManager::UpdateConnections(m_grid);
+
 	// init enemies
 	for (int i = 0; i < 10; i++)
 		m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player, m_grid);
@@ -91,7 +100,10 @@ void Game::RenderGrid()
 	{
 		for(int j = 0;j<m_grid.size(); j++)
 		{
-			DrawCube(m_grid.at(i).at(j)->position, 0.2f, 0.2f, 0.2f, RED);
+			if(m_grid.at(i).at(j)->reachable)
+				DrawCube(m_grid.at(i).at(j)->position, 0.2f, 0.2f, 0.2f, RED);
+			else
+				DrawCube(m_grid.at(i).at(j)->position, 0.2f, 0.2f, 0.2f, BLUE);
 		}
 	}
 }
