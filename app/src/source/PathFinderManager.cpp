@@ -146,7 +146,8 @@ std::vector<Node*> PathFinderManager::GetNeighbors(const Node* node, const std::
 					continue;
 				}
 
-				neighbors.push_back(grid[static_cast<int>(node->position.x) + newX][static_cast<int>(node->position.z) + newY]);
+				if(grid[static_cast<int>(node->position.x) + newX][static_cast<int>(node->position.z) + newY]->reachable)
+					neighbors.push_back(grid[static_cast<int>(node->position.x) + newX][static_cast<int>(node->position.z) + newY]);
 			}
 		}
 
@@ -167,5 +168,24 @@ Node* PathFinderManager::GetClosestNode(Vector3 position, const std::vector<std:
 	if (posY < 0)
 		posY = 0;
 
-	return grid.at(posX).at(posY);
+	if(!grid.at(posX).at(posY)->reachable)
+	{
+		for (int newX = -1; newX <= 1; newX++)
+		{
+			for (int newY = -1; newY <= 1; newY++)
+			{
+				if (posX + newX < grid.size() && posY + newY < grid.size()
+					&& posX + newX >= 0 && posY + newY >= 0 && grid.at(posX + newX).at(posY+newY)->reachable)
+				{
+					return grid.at(posX + newX).at(posY + newY);
+				}
+			}
+		}
+	}
+	else
+	{
+		return grid.at(posX).at(posY);
+	}
+
+	return nullptr;
 }

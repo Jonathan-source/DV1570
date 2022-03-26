@@ -9,6 +9,7 @@ void CollisionHandler::CheckBulletEnemy(std::vector<Enemy*>& enemies, std::vecto
 	{
 		for (const auto enemy : enemies)
 		{
+            
             // Check collisions Enemy vs bullet
             if (bullet->GetIsActive() && CheckCollisionBoxes(BoundingBox{Vector3{
                     enemy->GetPosition().x + enemy->GetBoundingBox().min.x,
