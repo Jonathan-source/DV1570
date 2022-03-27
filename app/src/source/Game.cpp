@@ -36,7 +36,7 @@ void Game::OnEnter()
 	PathFinderManager::UpdateConnections(m_grid);
 
 	// init enemies
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 11; i++)
 		m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player, m_grid);
 
 }

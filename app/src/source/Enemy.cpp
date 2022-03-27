@@ -8,14 +8,13 @@ Enemy::Enemy()
 	: Entity()
 	, m_health(100)
 	, m_attackDmg(1)
-	, m_velocity({ 0.f, 0.f, 0.f })
+	, m_runSpeed(3.f + static_cast<float>((rand() % 5) / 10.f)), m_velocity({ 0.f, 0.f, 0.f })
 	, m_direction({ 0.f, 0.f, })
 {
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
 	m_boundingBox = GetMeshBoundingBox(m_model.meshes[0]);
-	m_runSpeed = (1.f + static_cast<float>((rand() % 5) / 10.f));
 }
 
 Enemy::Enemy(Player* playerTarget)
@@ -100,7 +99,30 @@ void Enemy::SetGrid(const std::vector<std::vector<Node*>>& grid)
 void Enemy::Update()
 {
 	// Set direction towards the node player is closest
-	Node* closestNode = PathFinderManager::GetClosestNode(GetPosition(), m_grid);
+	int posX = static_cast<int>(round(GetPosition().x));
+	int posY = static_cast<int>(round(GetPosition().z));
+
+	if (posX >= static_cast<int>(m_grid.size()))
+		posX = static_cast<int>(m_grid.size()) - 1;
+	if (posY >= static_cast<int>(m_grid.size()))
+		posY = static_cast<int>(m_grid.size()) - 1;
+	if (posX < 0)
+		posX = 0;
+	if (posY < 0)
+		posY = 0;
+
+
+	Node* closestNode = m_grid[posX][posY];
+
+	if(!closestNode->reachable)
+	{
+		// ESCAPE FROM NODE
+		Node* newNode = PathFinderManager::GetClosestNode(GetPosition(), m_grid);
+		m_direction = { newNode->position.z - GetPosition().z,  newNode->position.x - GetPosition().x };
+		m_velocity = { m_direction.y, 0.0, m_direction.x };
+		return;
+	}
+
 	path = PathFinderManager::AStar(closestNode, PathFinderManager::GetClosestNode(m_playerTarget->GetPosition(), m_grid));
 
 	if (!path.empty())
@@ -114,7 +136,7 @@ void Enemy::Update()
 		return;
 	}
 
-	m_direction = Vector2Normalize(m_direction);
+	// m_direction = Vector2Normalize(m_direction);
 	m_velocity = { m_direction.y, 0.0, m_direction.x };
 
 	// Rotate towards target
