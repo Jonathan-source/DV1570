@@ -96,52 +96,39 @@ void Enemy::SetGrid(const std::vector<std::vector<Node*>>& grid)
 	m_grid = grid;
 }
 
-void Enemy::Update()
+void Enemy::MoveOnPath()
 {
-	// Set direction towards the node player is closest
-	int posX = static_cast<int>(round(GetPosition().x));
-	int posY = static_cast<int>(round(GetPosition().z));
+	Node* closestNode = PathFinderManager::GetClosestNode(GetPosition(), m_grid);
 
-	if (posX >= static_cast<int>(m_grid.size()))
-		posX = static_cast<int>(m_grid.size()) - 1;
-	if (posY >= static_cast<int>(m_grid.size()))
-		posY = static_cast<int>(m_grid.size()) - 1;
-	if (posX < 0)
-		posX = 0;
-	if (posY < 0)
-		posY = 0;
-
-
-	Node* closestNode = m_grid[posX][posY];
-
-	if(!closestNode->reachable)
-	{
-		// ESCAPE FROM NODE
-		Node* newNode = PathFinderManager::GetClosestNode(GetPosition(), m_grid);
-		m_direction = { newNode->position.z - GetPosition().z,  newNode->position.x - GetPosition().x };
-		m_velocity = { m_direction.y, 0.0, m_direction.x };
-		return;
-	}
-
+	// Generate path with A-star
 	path = PathFinderManager::AStar(closestNode, PathFinderManager::GetClosestNode(m_playerTarget->GetPosition(), m_grid));
 
+	// Move on path
 	if (!path.empty())
 	{
 		m_direction = { path.back()->position.z - closestNode->position.z,  path.back()->position.x - closestNode->position.x };
 	}
 	else
 	{
+		// Stop on empty path
 		m_direction = { 0,0 };
 		m_velocity = { 0, 0.0, 0};
 		return;
 	}
 
-	// m_direction = Vector2Normalize(m_direction);
+	// Give velocity depending on the direction for the next node
+	m_direction = Vector2Normalize(m_direction);
 	m_velocity = { m_direction.y, 0.0, m_direction.x };
 
 	// Rotate towards target
-	float angle = atan2f(m_direction.x, m_direction.y);
+	const float angle = atan2f(m_direction.x, m_direction.y);
 	m_model.transform = MatrixRotateXYZ({ 0, angle, 0 });
+}
+
+void Enemy::Update()
+{
+	// Generate path and move
+	MoveOnPath();
 }
 
 void Enemy::TakeDamage(int damage)

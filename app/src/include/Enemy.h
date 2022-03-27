@@ -29,10 +29,11 @@ public:
 	void SetBoundingBox(BoundingBox boundingBox);
 	void SetGrid(const std::vector<std::vector<Node*>>& grid);
 
+
 	//Functions
 	void Update();
 	void TakeDamage(int damage);
-
+	void MoveOnPath();
 private:
 	int m_health;
 	int m_attackDmg;
