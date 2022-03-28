@@ -9,6 +9,8 @@ Color colors[10] = {
 
 Editor::Editor()
 	: m_cameraVelocity({ 0.f,0.f,0.f })
+	, m_saveMessageCounter(0)
+	, m_showSaveMessage(false)
 {
 }
 
@@ -20,6 +22,7 @@ void Editor::OnEnter()
 	m_camera.fovy = 45.0f;  
 	m_camera.projection = CAMERA_PERSPECTIVE;
 
+	GenerateGrid();
 	SetupPanel();
 }
 
@@ -43,9 +46,7 @@ bool Editor::OnUpdate(float frameDelta)
 {
 	UpdateCamera(frameDelta);
 
-	Vector3 N = { 0.f, 1.f, 0.f };
-	float t = (-Vector3DotProduct(m_cameraRay.position, N)) / (Vector3DotProduct(m_cameraRay.direction, N));
-	m_boxPosition = Vector3Add(m_cameraRay.position, Vector3Scale(m_cameraRay.direction, t));
+	UpdateSaveMsgTimer(frameDelta);
 
 	return true;
 }
@@ -57,11 +58,9 @@ void Editor::OnRender()
 	
 	BeginMode3D(m_camera);
 
-	DrawGrid(100, 1.0f);
+	DrawGrid(50, 1.0f);
+	DrawTileGrid();
 	DrawObjects();
-	
-	if(!m_isMouseOnPanel)
-		DrawCubeWires(m_boxPosition, 1.0f, 1.0f, 1.0f, MAROON);
 
 	EndMode3D();
 
@@ -108,6 +107,17 @@ void Editor::HandleCameraInput()
 		m_cameraSpeedModifier = 1.f;
 }
 
+void Editor::HandleMouseInput()
+{
+	// Mouse position in world space.
+	Vector3 N = { 0.f, 1.f, 0.f };
+	float t = (-Vector3DotProduct(m_cameraRay.position, N)) / (Vector3DotProduct(m_cameraRay.direction, N));
+	Vector3 mousePosition = Vector3Add(m_cameraRay.position, Vector3Scale(m_cameraRay.direction, t));
+
+	m_currentTile.x = mousePosition.x;
+	m_currentTile.y = mousePosition.y;
+}
+
 void Editor::ZoomIn()
 {
 
@@ -118,11 +128,54 @@ void Editor::ZoomOut()
 
 }
 
+void Editor::UpdateSaveMsgTimer(float frameDelta)
+{
+	if (m_showSaveMessage)
+	{
+		m_saveMessageCounter++; 
+		if (m_saveMessageCounter > 120) // 60 frames per sec: 2s = 120.
+		{
+			m_showSaveMessage = false;
+			m_saveMessageCounter = 0;
+		}
+	}
+}
+
 void Editor::DrawObjects()
 {
 	for (const auto& obj : m_objects)
 	{
 		DrawModel(obj.model, obj.position, 0.5f, obj.color);
+	}
+}
+
+void Editor::DrawTileGrid()
+{
+	Rectangle rect;
+	rect.width = 10.f;
+	rect.height = 10.f;
+		
+	for (int i = 0; i < NUM_TILES; i++)
+	{
+		DrawRectangle(m_tiles[i].position.x,
+			m_tiles[i].position.y,
+			rect.width,
+			rect.height,
+			colors[3]);
+	}
+}
+
+void Editor::GenerateGrid()
+{
+	float offset = -25.f;
+	for (int y = 0; y < GRID_Y; ++y)
+	{
+		for (int x = 0; x < GRID_X; ++x)
+		{
+			int index = y * GRID_X + x;
+			m_tiles[index].id = index;
+			m_tiles[index].position = Vector3{ offset + x, offset + y, 0.f };
+		}
 	}
 }
 
@@ -136,7 +189,8 @@ void Editor::SetupPanel()
 		m_itemRects[i].height = 60;
 	}
 
-	m_btnSaveRec = { GetScreenWidth() / 1.5f - 10, 20, 80, 60 };
+	m_btnNewRec = { GetScreenWidth() / 1.5f - 10, 20, 80, 60 };
+	m_btnSaveRec = { GetScreenWidth() / 1.2f - 10, 20, 80, 60 };
 }
 
 void Editor::HandleItemSelectionInput()
@@ -146,8 +200,11 @@ void Editor::HandleItemSelectionInput()
 	if (m_itemSelected >= 10) m_itemSelected = 10 - 1;
 	else if (m_itemSelected < 0) m_itemSelected = 0;
 
-	// Check if mouse hover panel
 	m_isMouseOnPanel = false;
+	m_btnSaveMouseHover = false;
+	m_btnNewMouseHover = false;
+
+	// Check if mouse hover panel
 	if (mousePos.y <= 100.f)
 	{
 		m_isMouseOnPanel = true;
@@ -171,10 +228,24 @@ void Editor::HandleItemSelectionInput()
 		}
 
 		// Check mouse hover save button
-		if (CheckCollisionPointRec(mousePos, m_btnSaveRec)) 
+		if (CheckCollisionPointRec(mousePos, m_btnSaveRec))
+		{
 			m_btnSaveMouseHover = true;
-		else 
-			m_btnSaveMouseHover = false;
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+			{
+				m_showSaveMessage = true;
+			}
+		}
+
+		// Check mouse hover save button
+		if (CheckCollisionPointRec(mousePos, m_btnNewRec))
+		{
+			m_btnNewMouseHover = true;
+			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
+			{
+				m_objects.clear();
+			}
+		}
 	}
 }
 
@@ -199,21 +270,57 @@ void Editor::DrawPanel()
 		m_itemRects[m_itemSelected].width + 8, m_itemRects[m_itemSelected].height + 8 };
 	DrawRectangleLinesEx(rect, 2, BLACK);
 
-	// Draw save image button
+	// Drawn new button
+	DrawRectangleLinesEx(m_btnNewRec, 2, m_btnNewMouseHover ? RED : BLACK);
+	DrawText("NEW!", GetScreenWidth() / 1.5f, 40, 20, m_btnNewMouseHover ? RED : BLACK);
+
+	// Draw save button
 	DrawRectangleLinesEx(m_btnSaveRec, 2, m_btnSaveMouseHover ? RED : BLACK);
-	DrawText("SAVE!", GetScreenWidth() / 1.5f, 40, 20, m_btnSaveMouseHover ? RED : BLACK);
+	DrawText("SAVE!", GetScreenWidth() / 1.2f, 40, 20, m_btnSaveMouseHover ? RED : BLACK);
+
+	// Draw save image message
+	if (m_showSaveMessage)
+	{
+		DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(RAYWHITE, 0.8f));
+		DrawRectangle(0, 150, GetScreenWidth(), 80, BLACK);
+		std::string name = "name-of-the-map";
+		std::string text = "LEVEL SAVED: " + name;
+		DrawText(text.c_str(), GetScreenWidth() / 3, 180, 20, RAYWHITE);
+	}
 }
 
 void Editor::HandleItemPlacementInput()
 {
-	m_isBoxPositionValid = true;
-	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) && !m_isMouseOnPanel)
+	if (!m_isMouseOnPanel)
 	{
-		if (m_isBoxPositionValid)
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 		{
-			static Model model = LoadModel("../resources/meshes/cube.obj");
-			m_objects.push_back({ m_boxPosition, model, colors[m_itemSelected] });
-			TraceLog(TraceLogLevel::LOG_DEBUG, "Object created!");
+			Ray ray = GetMouseRay(GetMousePosition(), m_camera);
+			RayCollision collision = {0};
+			for (int i = 0; i < m_objects.size() && !collision.hit; ++i)
+			{
+				Vector3 cubePosition = m_objects[i].position;
+				Vector3 cubeSize = { 0.5f, 0.5f, 0.5f };
+
+				// Check collision between ray and box			
+				collision = GetRayCollisionBox(ray,
+                            BoundingBox { Vector3 { cubePosition.x - cubeSize.x, cubePosition.y - cubeSize.y, cubePosition.z - cubeSize.z },
+                                          Vector3 { cubePosition.x + cubeSize.x, cubePosition.y + cubeSize.y, cubePosition.z + cubeSize.z }});
+			}
+
+			if (!collision.hit)
+			{
+				static Model model = LoadModel("../resources/meshes/cube.obj");
+				m_objects.push_back(
+					{
+						Vector3{0,0,0},
+						model,
+						colors[m_itemSelected],
+						GetMeshBoundingBox(model.meshes[0])
+					});
+				TraceLog(TraceLogLevel::LOG_DEBUG, "Object created!");
+			}
 		}
 	}
 }
+

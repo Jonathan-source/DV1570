@@ -31,13 +31,22 @@ private:
 		Vector3 position;
 		Model model;
 		Color color;
+		BoundingBox boundingBox;
 	};
 
-	Vector3 m_boxPosition;
-	Color m_boxColor;
-	bool m_isBoxPositionValid;
-
 	std::vector<Object> m_objects;
+	
+	struct Tiles {
+		Vector3 position;
+		unsigned int id;
+		bool isOccupied;
+	};
+	const int GRID_X = 50;
+	const int GRID_Y = 50;
+	static const int NUM_TILES = 2500;
+	std::array<Tiles, NUM_TILES> m_tiles;
+
+	Rectangle m_currentTile;
 
 	Rectangle m_itemRects[10];
 	int m_itemSelected ;
@@ -51,12 +60,18 @@ private:
 	bool m_showSaveMessage;
 	int m_saveMessageCounter;
 
+	Rectangle m_btnNewRec;
+	bool m_btnNewMouseHover;
+
 	void UpdateCamera(float frameDelta);
+	void UpdateSaveMsgTimer(float frameDelta);
 	void HandleCameraInput();
+	void HandleMouseInput();
 	void ZoomIn();
 	void ZoomOut();
 	void DrawObjects();
-
+	void DrawTileGrid();
+	void GenerateGrid();
 	void SetupPanel();
 	void HandleItemSelectionInput();
 	void HandleItemPlacementInput();
