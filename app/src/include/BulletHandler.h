@@ -10,6 +10,8 @@ public:
 	BulletHandler();
 	// Deconstructor
 	~BulletHandler();
+	// Getters
+	std::vector<Projectile*>& GetBullets();
 	// Functions
 	void SpawnBullet(Bullet bulletType, Vector3 direction, Vector3 spawnPosition, float angle);
 	void UpdateBullets();
