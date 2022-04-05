@@ -1,8 +1,11 @@
 #include "pch.h"
 #include "EnemyManager.h"
 
-EnemyManager::EnemyManager()
+EnemyManager::EnemyManager(Player* playerTarget, const std::vector<std::vector<Node*>>& grid)
 	:currentSpawnIndex(0)
+	, m_playerTarget(playerTarget)
+	, m_grid(grid)
+	, m_waveCount(0)
 {
 
 }
@@ -30,7 +33,7 @@ void EnemyManager::AddSpawnPoint(Vector3 spawnPoint)
 	m_spawnPoints.push_back(spawnPoint);
 }
 
-void EnemyManager::SpawnEnemy(EnemyType enemyType, Player* playerTarget, const std::vector<std::vector<Node*>>& grid)
+void EnemyManager::SpawnEnemy(EnemyType enemyType)
 {
 
 	switch (enemyType)
@@ -40,8 +43,8 @@ void EnemyManager::SpawnEnemy(EnemyType enemyType, Player* playerTarget, const s
 			const auto enemy = new Enemy;
 			currentSpawnIndex = ++currentSpawnIndex % m_spawnPoints.size();
 			enemy->SetPosition(m_spawnPoints[currentSpawnIndex]);
-			enemy->SetPlayerTarget(playerTarget);
-			enemy->SetGrid(grid);
+			enemy->SetPlayerTarget(m_playerTarget);
+			enemy->SetGrid(m_grid);
 			m_enemies.push_back(enemy);
 		}
 		break;
@@ -49,6 +52,14 @@ void EnemyManager::SpawnEnemy(EnemyType enemyType, Player* playerTarget, const s
 	case EnemyType::TYPE2: break;
 	default:
 		break;
+	}
+}
+
+void EnemyManager::SpawnWave(int numOfEnemies)
+{
+	for(int i = 0; i < numOfEnemies; i++)
+	{
+		SpawnEnemy(EnemyType::DEFAULT);
 	}
 }
 
@@ -65,6 +76,12 @@ void EnemyManager::UpdateEnemies()
 			delete m_enemies.at(i);
 			m_enemies.erase(m_enemies.begin() + i);
 		}
+	}
+
+	// Generate new wave if all enemies are gone
+	if(m_enemies.empty())
+	{
+		SpawnWave(++m_waveCount * 2);
 	}
 }
 

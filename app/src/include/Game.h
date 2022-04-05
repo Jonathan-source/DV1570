@@ -26,7 +26,7 @@ private:
 	Camera m_camera;
 	Player m_player;
 	Enemy m_enemy;
-	EnemyManager m_enemyManager;
+	EnemyManager* m_enemyManager;
 	BulletHandler m_bulletHandler;
 	std::vector<std::vector<Node*>> m_grid;
 };

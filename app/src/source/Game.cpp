@@ -13,18 +13,23 @@ Game::~Game()
 			delete node;
 		}
 	}
+
+	delete m_enemyManager;
 }
 
 void Game::OnEnter()
 {
 	InitCamera();
-	m_enemyManager.AddSpawnPoint({ 5,0,5 });
-	m_enemyManager.AddSpawnPoint({ 15,0,5 });
-	m_enemyManager.AddSpawnPoint({ 5,0,15 });
-	m_enemyManager.AddSpawnPoint({ 15,0,15 });
 
 	// init grid
 	m_grid = PathFinderManager::InitializeGrid(50,1);
+
+	m_enemyManager = new EnemyManager(&m_player, m_grid);
+
+	m_enemyManager->AddSpawnPoint({ 10,0,10 });
+	m_enemyManager->AddSpawnPoint({ 40,0,10 });
+	m_enemyManager->AddSpawnPoint({ 40,0,40 });
+	m_enemyManager->AddSpawnPoint({ 10,0,40 });
 
 	m_grid[3][3]->reachable = false;
 	m_grid[3][4]->reachable = false;
@@ -34,11 +39,6 @@ void Game::OnEnter()
 	m_grid[2][5]->reachable = false;
 
 	PathFinderManager::UpdateConnections(m_grid);
-
-	// init enemies
-	for (int i = 0; i < 11; i++)
-		m_enemyManager.SpawnEnemy(EnemyType::DEFAULT, &m_player, m_grid);
-
 }
 
 void Game::OnInput()
@@ -83,13 +83,13 @@ bool Game::OnUpdate(float frameDelta)
 	m_player.Move(m_player.GetVelocity(), frameDelta, m_player.GetRunSpeed());
 	m_player.Update();
 	// Update enemies
-	m_enemyManager.UpdateEnemies();
+	m_enemyManager->UpdateEnemies();
 	// Update Camera.
 	UpdateCamera();
 	//Update Bullets
 	m_bulletHandler.UpdateBullets();
 
-	CollisionHandler::CheckBulletEnemy(m_enemyManager.GetEnemies(), m_bulletHandler.GetBullets());
+	CollisionHandler::CheckBulletEnemy(m_enemyManager->GetEnemies(), m_bulletHandler.GetBullets());
 
 	return true;
 }
@@ -116,7 +116,7 @@ void Game::OnRender()
 	BeginMode3D(m_camera);
 	DrawModel(m_player.GetModel(), m_player.GetPosition(), 1.0f, WHITE);
 	m_bulletHandler.RenderBullets();
-	m_enemyManager.RenderEnemies();
+	m_enemyManager->RenderEnemies();
 	RenderGrid();
 	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
 	DrawGrid(10, 1.0f);
@@ -127,7 +127,7 @@ void Game::OnRender()
 
 void Game::OnExit()
 {
-
+	
 }
 
 void Game::InitCamera()

@@ -7,7 +7,7 @@ class EnemyManager
 {
 public:
 	// Constructor
-	EnemyManager();
+	EnemyManager(Player* playerTarget, const std::vector<std::vector<Node*>>& grid);
 	// Deconstructor
 	~EnemyManager();
 	// Getters
@@ -18,14 +18,18 @@ public:
 
 	// Functions
 	void AddSpawnPoint(Vector3 spawnPoint);
-	void SpawnEnemy(EnemyType enemyType, Player* playerTarget, const std::vector<std::vector<Node*>>& grid);
-	void UpdateEnemies() ;
+	void SpawnEnemy(EnemyType enemyType);
+	void SpawnWave(int numOfEnemies);
+	void UpdateEnemies();
 	void RenderEnemies() const;
 
 
 private:
 	std::vector<Enemy*> m_enemies;
 	std::vector<Vector3> m_spawnPoints;
+	Player* m_playerTarget;
+	const std::vector<std::vector<Node*>> m_grid;
+	int m_waveCount;
 	int currentSpawnIndex;
 };
 
