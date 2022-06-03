@@ -121,7 +121,7 @@ void Game::OnRender()
 	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
 	DrawGrid(10, 1.0f);
 	EndMode3D();
-
+	DrawRectangleRec(m_player.GetHealthBar(), Fade(RED, 0.5f));
 	EndDrawing();
 }
 

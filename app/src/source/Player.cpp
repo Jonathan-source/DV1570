@@ -13,6 +13,8 @@ Player::Player()
 	, m_velocity({0.f, 0.f, 0.f})
 	, m_direction({0.f, 0.f,})
 	, m_bulletType(Bullet::DEFAULT)
+	, m_healthBar({10,10,100, 50})
+	, m_healthBarScale(3.0f)
 
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
@@ -31,6 +33,8 @@ Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
 	, m_velocity({0.f, 0.f, 0.f})
 	, m_direction({0.f, 0.f,})
 	, m_bulletType(Bullet::DEFAULT)
+	, m_healthBar({ 10,10,100, 50 })
+	, m_healthBarScale(3.0f)
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	// Tranformation matrix for rotations
@@ -127,7 +131,10 @@ void Player::TakeDamage(const int damage)
 
 void Player::Update()
 {
-	m_shootTimer -= GetFrameTime();
+	m_shootTimer -= GetFrameTime(); 
+
+	// Update Health bar according to current health
+	m_healthBar = { 10, 10, static_cast<float>(m_health) * m_healthBarScale, 50 };
 }
 
 Vector3 Player::GetVelocity() const
@@ -143,6 +150,11 @@ Texture2D Player::GetTexture() const
 Bullet Player::GetBulletType() const
 {
 	return m_bulletType;
+}
+
+Rectangle Player::GetHealthBar() const
+{
+	return m_healthBar;
 }
 
 void Player::SetVelocity(const Vector3& velocity)

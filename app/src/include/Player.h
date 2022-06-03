@@ -22,6 +22,7 @@ public:
 	[[nodiscard]] Vector3 GetVelocity() const;
 	[[nodiscard]] Texture2D GetTexture() const;
 	[[nodiscard]] Bullet GetBulletType() const;
+	[[nodiscard]] Rectangle GetHealthBar() const;
 
 	//Setters
 	void SetHealth(int health);
@@ -49,5 +50,8 @@ private:
 	Vector2 m_direction;
 	Texture2D m_texture{};
 	Bullet m_bulletType;
+	// Health Bar
+	Rectangle m_healthBar;
+	float m_healthBarScale;
 	void RotateWithMouse(const Ray& ray);
 };
