@@ -37,13 +37,15 @@ private:
 	std::vector<Object> m_objects;
 	
 	struct Tiles {
+		Texture texture;
 		Vector3 position;
 		unsigned int id;
 		bool isOccupied;
 	};
+
 	const int GRID_X = 50;
 	const int GRID_Y = 50;
-	static const int NUM_TILES = 2500;
+	static const int NUM_TILES = 2500; // GRID_X * GRID_Y
 	std::array<Tiles, NUM_TILES> m_tiles;
 
 	Rectangle m_currentTile;

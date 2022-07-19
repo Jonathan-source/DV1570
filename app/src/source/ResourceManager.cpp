@@ -24,7 +24,7 @@ Model& ResourceManager::GetModel(const std::string& name)
     if (it == m_models.end())
     {
         Model& model = m_models[name];
-        model = LoadModel(std::string(m_resourcePath + "/models/" + name).c_str());
+        model = LoadModel(std::string(m_resourcePath + "/meshes/" + name).c_str());
         return model;
     }
     return it->second;
@@ -40,4 +40,8 @@ Sound& ResourceManager::GetSound(const std::string& name)
         return sound;
     }
     return it->second;
+}
+
+ResourceManager::~ResourceManager()
+{
 }

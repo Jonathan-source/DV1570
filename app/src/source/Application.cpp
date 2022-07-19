@@ -2,24 +2,13 @@
 #include "Application.h"
 #include "ResourceManager.h"
 
-Application::Application()
-    : m_sceneStateMachine(StateMachine())
+Application::Application(lua_State* L)
+    : L(L)
+    , m_sceneStateMachine(StateMachine())
 {
     SetupEngine();
-
-    // Load Resources
-    auto& rm = ResourceManager::Get();
-    rm.SetResourcePath("../resources");
-
-    rm.GetModel("zombie.obj");
-
-    rm.GetTexture("zombie.png");
-
+    LoadResources();
     SetupGameScenes();
-}
-
-Application::~Application()
-{
 }
 
 void Application::Run()
@@ -39,6 +28,9 @@ void Application::Run()
 
         DrawFPS(10, 10);
     }
+
+    CloseWindow();
+    CloseAudioDevice();
 }
 
 void Application::SetupEngine()
@@ -53,6 +45,17 @@ void Application::SetupEngine()
     InitAudioDevice();
 
     SetTargetFPS(60);
+}
+
+void Application::LoadResources()
+{
+    auto& recourceManager = ResourceManager::Get();
+    recourceManager.SetResourcePath("../resources");
+
+    recourceManager.GetModel("zombie.obj");
+    recourceManager.GetTexture("zombie.png");
+
+    recourceManager.GetModel("rock_1.obj");
 }
 
 void Application::SetupGameScenes()

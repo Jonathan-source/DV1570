@@ -11,15 +11,16 @@
 class Application
 {
 public:
-    Application();
+    Application(lua_State* L);
     virtual ~Application();
 
     void Run();
     
 private:
+    lua_State * L;
     StateMachine m_sceneStateMachine;
     bool m_isRunning;
     void SetupEngine();
-
+    void LoadResources();
     void SetupGameScenes();
 };

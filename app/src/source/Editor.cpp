@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Editor.h"
+#include "ResourceManager.h"
 
 // Temporary colors.
 Color colors[10] = {
@@ -16,10 +17,6 @@ Editor::Editor()
 
 void Editor::OnEnter()
 {
-	// Load Resources
-
-
-
 	m_camera.position = { 0.0f, 10.0f, 10.0f };
 	m_camera.target = { 0.0f, 0.0f, 0.0f };	
 	m_camera.up = { 0.0f, 1.0f, 0.0f };	
@@ -149,7 +146,7 @@ void Editor::DrawObjects()
 {
 	for (const auto& obj : m_objects)
 	{
-		DrawModel(obj.model, obj.position, 0.5f, obj.color);
+		DrawModel(obj.model, obj.position, 1.f, WHITE);
 	}
 }
 
@@ -194,7 +191,7 @@ void Editor::SetupPanel()
 	}
 
 	m_btnNewRec = { GetScreenWidth() / 1.5f - 10, 20, 80, 60 };
-	m_btnSaveRec = { GetScreenWidth() / 1.2f - 10, 20, 80, 60 };
+	m_btnSaveRec = { GetScreenWidth() / 1.2f - 10, 20, 85, 60 };
 }
 
 void Editor::HandleItemSelectionInput()
@@ -276,11 +273,11 @@ void Editor::DrawPanel()
 
 	// Drawn new button
 	DrawRectangleLinesEx(m_btnNewRec, 2, m_btnNewMouseHover ? RED : BLACK);
-	DrawText("NEW!", GetScreenWidth() / 1.5f, 40, 20, m_btnNewMouseHover ? RED : BLACK);
+	DrawText(" NEW!", GetScreenWidth() / 1.5f, 40, 20, m_btnNewMouseHover ? RED : BLACK);
 
 	// Draw save button
 	DrawRectangleLinesEx(m_btnSaveRec, 2, m_btnSaveMouseHover ? RED : BLACK);
-	DrawText("SAVE!", GetScreenWidth() / 1.2f, 40, 20, m_btnSaveMouseHover ? RED : BLACK);
+	DrawText(" SAVE!", GetScreenWidth() / 1.2f, 40, 20, m_btnSaveMouseHover ? RED : BLACK);
 
 	// Draw save image message
 	if (m_showSaveMessage)
@@ -295,35 +292,41 @@ void Editor::DrawPanel()
 
 void Editor::HandleItemPlacementInput()
 {
-	if (!m_isMouseOnPanel)
+	if (m_isMouseOnPanel) return;
+
+	if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
 	{
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		Ray ray = GetMouseRay(GetMousePosition(), m_camera);
+		RayCollision collision = { 0 };
+		for (int i = 0; i < m_objects.size() && !collision.hit; ++i)
 		{
-			Ray ray = GetMouseRay(GetMousePosition(), m_camera);
-			RayCollision collision = {0};
-			for (int i = 0; i < m_objects.size() && !collision.hit; ++i)
-			{
-				Vector3 cubePosition = m_objects[i].position;
-				Vector3 cubeSize = { 0.5f, 0.5f, 0.5f };
+			Vector3 position = m_objects[i].position;
+			BoundingBox boundingBox = m_objects[i].boundingBox;
 
-				// Check collision between ray and box			
-				collision = GetRayCollisionBox(ray,
-                            BoundingBox { Vector3 { cubePosition.x - cubeSize.x, cubePosition.y - cubeSize.y, cubePosition.z - cubeSize.z },
-                                          Vector3 { cubePosition.x + cubeSize.x, cubePosition.y + cubeSize.y, cubePosition.z + cubeSize.z }});
-			}
+			collision = GetRayCollisionBox(ray, BoundingBox{ Vector3{
+					position.x + boundingBox.min.x,
+					position.y + boundingBox.min.y,
+					position.z + boundingBox.min.z,
+			},Vector3{
+					position.x + boundingBox.max.x,
+					position.y + boundingBox.max.y,
+					position.z + boundingBox.max.z,
+				}
+			});	
+		}
 
-			if (!collision.hit)
-			{
-				static Model model = LoadModel("../resources/meshes/cube.obj");
-				m_objects.push_back(
-					{
-						Vector3{0,0,0},
-						model,
-						colors[m_itemSelected],
-						GetMeshBoundingBox(model.meshes[0])
-					});
-				TraceLog(TraceLogLevel::LOG_DEBUG, "Object created!");
-			}
+		if (!collision.hit)
+		{
+			collision = GetRayCollisionQuad(ray, { -25, 0, 25 }, { 25, 0, 25 }, { 25, 0, -25 }, { -25, 0, -25 });
+			static Model model = ResourceManager::Get().GetModel("rock_1.obj");
+			m_objects.push_back(
+				{
+					Vector3 { collision.point },
+					model,
+					colors[m_itemSelected],
+					GetMeshBoundingBox(model.meshes[0])
+				});
+			TraceLog(TraceLogLevel::LOG_DEBUG, "Object created!");
 		}
 	}
 }
