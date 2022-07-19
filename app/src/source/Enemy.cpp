@@ -8,7 +8,10 @@ Enemy::Enemy()
 	: Entity()
 	, m_health(100)
 	, m_attackDmg(1)
-	, m_runSpeed(3.f + static_cast<float>((rand() % 5) / 10.f)), m_velocity({ 0.f, 0.f, 0.f })
+	, m_runSpeed(3.f + static_cast<float>((rand() % 5) / 10.f))
+	, m_updateFreqAStar(static_cast<float>((rand() % 100 + 1) / 100.f))
+	, m_updateTimer(m_updateFreqAStar)
+	, m_velocity({0.f, 0.f, 0.f})
 	, m_direction({ 0.f, 0.f, })
 {
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
@@ -22,6 +25,8 @@ Enemy::Enemy(Player* playerTarget)
 	, m_health(100)
 	, m_attackDmg(1)
 	, m_runSpeed(5)
+	, m_updateFreqAStar(static_cast<float>((rand() % 100 + 1) / 100.f))
+	, m_updateTimer(m_updateFreqAStar)
 	, m_velocity({ 0.f, 0.f, 0.f })
 	, m_direction({ 0.f, 0.f, })
 	, m_playerTarget(playerTarget)
@@ -101,12 +106,24 @@ void Enemy::MoveOnPath()
 	Node* closestNode = PathFinderManager::GetClosestNode(GetPosition(), m_grid);
 
 	// Generate path with A-star
-	path = PathFinderManager::AStar(closestNode, PathFinderManager::GetClosestNode(m_playerTarget->GetPosition(), m_grid));
+	if (m_updateTimer < 0.001f)
+	{
+		path = PathFinderManager::AStar(closestNode, PathFinderManager::GetClosestNode(m_playerTarget->GetPosition(), m_grid));
+		m_updateTimer = m_updateFreqAStar;
+	}
+	else
+		m_updateTimer -= GetFrameTime();
 
 	// Move on path
 	if (!path.empty())
 	{
-		m_direction = { path.back()->position.z - closestNode->position.z,  path.back()->position.x - closestNode->position.x };
+		if (Vector2Distance( {path.back()->position.x, path.back()->position.z}, {this->GetPosition().x, this->GetPosition().z} ) < 0.5f)
+		{
+			path.pop_back();
+		}
+
+		if(!path.empty())
+			m_direction = { path.back()->position.z - GetPosition().z,  path.back()->position.x - GetPosition().x };
 	}
 	else
 	{

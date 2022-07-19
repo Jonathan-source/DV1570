@@ -38,11 +38,14 @@ private:
 	int m_health;
 	int m_attackDmg;
 	float m_runSpeed;
+	float m_updateFreqAStar;
+	float m_updateTimer;
 	BoundingBox m_boundingBox;
 	Vector3 m_velocity;
 	Vector2 m_direction;
 	Texture2D m_texture{};
 	Player* m_playerTarget;
+	
 
 	std::vector<Node*> path;
 	std::vector<std::vector<Node*>> m_grid;
