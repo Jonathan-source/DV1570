@@ -15,6 +15,7 @@ Enemy::Enemy()
 	, m_updateTimer(m_updateFreqAStar)
 	, m_velocity({0.f, 0.f, 0.f})
 	, m_direction({ 0.f, 0.f, })
+	, m_attackRange(5.f)
 {
 	auto& rm = ResourceManager::Get();
 	SetModel(rm.GetModel("zombie.obj"));
@@ -34,6 +35,7 @@ Enemy::Enemy(Player* playerTarget)
 	, m_velocity({ 0.f, 0.f, 0.f })
 	, m_direction({ 0.f, 0.f, })
 	, m_playerTarget(playerTarget)
+	, m_attackRange(5.f)
 {
 	auto& rm = ResourceManager::Get();
 	SetModel(rm.GetModel("zombie.obj"));
@@ -152,6 +154,9 @@ void Enemy::Update()
 {
 	// Generate path and move
 	MoveOnPath();
+
+	// Attack player
+	//if(m_playerTarget->GetPosition())
 }
 
 void Enemy::TakeDamage(int damage)
