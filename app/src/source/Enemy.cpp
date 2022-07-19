@@ -4,6 +4,8 @@
 
 #include "PathFinderManager.h"
 
+#include "ResourceManager.h"
+
 Enemy::Enemy()
 	: Entity()
 	, m_health(100)
@@ -14,8 +16,10 @@ Enemy::Enemy()
 	, m_velocity({0.f, 0.f, 0.f})
 	, m_direction({ 0.f, 0.f, })
 {
-	SetModel(LoadModel("../resources/meshes/zombie.obj"));
-	this->m_texture = LoadTexture("../resources/textures/zombie.png");
+	auto& rm = ResourceManager::Get();
+	SetModel(rm.GetModel("zombie.obj"));
+	this->m_texture = rm.GetTexture("zombie.png");
+
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
 	m_boundingBox = GetMeshBoundingBox(m_model.meshes[0]);
 }
@@ -31,8 +35,10 @@ Enemy::Enemy(Player* playerTarget)
 	, m_direction({ 0.f, 0.f, })
 	, m_playerTarget(playerTarget)
 {
-	SetModel(LoadModel("../resources/meshes/zombie.obj"));
-	this->m_texture = LoadTexture("../resources/textures/zombie.png");
+	auto& rm = ResourceManager::Get();
+	SetModel(rm.GetModel("zombie.obj"));
+	this->m_texture = rm.GetTexture("zombie.png");
+
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
 	m_boundingBox = GetMeshBoundingBox(m_model.meshes[0]);
 }

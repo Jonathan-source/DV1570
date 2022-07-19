@@ -41,7 +41,7 @@ project "Application"
     -- This is the place to add filters.
     vpaths {
         ["src/"] = { "**main.cpp" },
-            ["src/Application/"] = { "**Application.*", "**pch.*" },
+            ["src/Application/"] = { "**Application.*", "**ResourceManager.*", "**pch.*" },
             ["src/GameStates/"] = { "**StateMachine.*", "**IState.*", "**MainMenu.*", "**Game.*", "**Highscore.*", "**Editor.*" },
             ["src/Enitity/"] = { "**Entity.*", "**Player.*", "**Enemy.*", "**EnemyManager.*" },
         ["src/Scripts/"] = { "**.lua"},

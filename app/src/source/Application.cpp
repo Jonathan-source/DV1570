@@ -1,11 +1,25 @@
 #include "pch.h"
 #include "Application.h"
+#include "ResourceManager.h"
 
 Application::Application()
     : m_sceneStateMachine(StateMachine())
 {
     SetupEngine();
+
+    // Load Resources
+    auto& rm = ResourceManager::Get();
+    rm.SetResourcePath("../resources");
+
+    rm.GetModel("zombie.obj");
+
+    rm.GetTexture("zombie.png");
+
     SetupGameScenes();
+}
+
+Application::~Application()
+{
 }
 
 void Application::Run()
