@@ -37,6 +37,7 @@ public:
 private:
 	int m_health;
 	int m_attackDmg;
+	float m_attackRange;
 	float m_runSpeed;
 	float m_updateFreqAStar;
 	float m_updateTimer;

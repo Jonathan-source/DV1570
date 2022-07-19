@@ -13,6 +13,7 @@ Enemy::Enemy()
 	, m_updateTimer(m_updateFreqAStar)
 	, m_velocity({0.f, 0.f, 0.f})
 	, m_direction({ 0.f, 0.f, })
+	, m_attackRange(5.f)
 {
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
@@ -30,6 +31,7 @@ Enemy::Enemy(Player* playerTarget)
 	, m_velocity({ 0.f, 0.f, 0.f })
 	, m_direction({ 0.f, 0.f, })
 	, m_playerTarget(playerTarget)
+	, m_attackRange(5.f)
 {
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
@@ -146,6 +148,9 @@ void Enemy::Update()
 {
 	// Generate path and move
 	MoveOnPath();
+
+	// Attack player
+	//if(m_playerTarget->GetPosition())
 }
 
 void Enemy::TakeDamage(int damage)
