@@ -32,6 +32,7 @@ public:
 
 	//Functions
 	void Update();
+	void AttackPlayer();
 	void TakeDamage(int damage);
 	void MoveOnPath();
 private:
@@ -41,6 +42,8 @@ private:
 	float m_runSpeed;
 	float m_updateFreqAStar;
 	float m_updateTimer;
+	float m_attackTimer;
+	float m_attackCooldown;
 	BoundingBox m_boundingBox;
 	Vector3 m_velocity;
 	Vector2 m_direction;

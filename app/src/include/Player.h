@@ -38,6 +38,8 @@ public:
 	void TakeDamage(int damage);
 	void Update();
 
+	void HandleStun();
+
 
 private:
 	int m_health;
@@ -45,7 +47,10 @@ private:
 	float m_runSpeed;
 	float m_angle{};
 	float m_shootTimer;
+	float m_stunTimer;
 	float m_shootCooldown;
+	float m_stunCooldown;
+	bool m_isStunned;
 	Vector3 m_velocity;
 	Vector2 m_direction;
 	Texture2D m_texture{};
