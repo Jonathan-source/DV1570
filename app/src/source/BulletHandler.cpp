@@ -3,7 +3,7 @@
 
 BulletHandler::BulletHandler()
 {
-	m_bulletModel = LoadModel("../resources/meshes/tree_2.obj");
+	m_bulletModel = LoadModel("../resources/meshes/bullet.obj");
 	m_bulletBounds = GetMeshBoundingBox(m_bulletModel.meshes[0]);
 	//m_bulletTexture = LoadTexture("../resources/textures/Steve.png");z§
 	//m_bulletModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_bulletTexture;
@@ -30,7 +30,7 @@ void BulletHandler::SpawnBullet(Bullet bulletType, Vector3 direction, Vector3 sp
 	case Bullet::DEFAULT: 
 	{
 		auto projectile = new Projectile(Vector3Add(spawnPosition, {0,1,0}), direction, true, 3.f);
-		projectile->SetBulletSpeed(0.f);
+		projectile->SetBulletSpeed(20.f);
 		m_bulletModel.transform = m_bulletModel.transform = MatrixRotateXYZ({ 0, angle, 0 });
 		
 		projectile->SetModel(m_bulletModel);

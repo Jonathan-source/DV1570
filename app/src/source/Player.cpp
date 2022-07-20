@@ -15,6 +15,8 @@ Player::Player()
 	, m_bulletType(Bullet::DEFAULT)
 	, m_healthBar({10,10,100, 50})
 	, m_healthBarScale(3.0f)
+	, m_stunCooldown(0.25f)
+	, m_isStunned(false)
 
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
@@ -35,6 +37,8 @@ Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
 	, m_bulletType(Bullet::DEFAULT)
 	, m_healthBar({ 10,10,100, 50 })
 	, m_healthBarScale(3.0f)
+	, m_stunCooldown(0.25f)
+	, m_isStunned(false)
 {
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	// Tranformation matrix for rotations
@@ -90,6 +94,9 @@ void Player::SetTexture(Texture2D texture)
 
 void Player::PlayerInput(const Ray &ray)
 {
+	if (this->m_isStunned)
+		return;
+
 	if (IsKeyDown(KEY_A))
 		m_velocity.x = 1.0f;
 
@@ -127,6 +134,7 @@ void Player::Shoot(BulletHandler& bulletHandler)
 void Player::TakeDamage(const int damage)
 {
 	m_health -= damage;
+	m_isStunned = true;
 }
 
 void Player::Update()
@@ -135,6 +143,22 @@ void Player::Update()
 
 	// Update Health bar according to current health
 	m_healthBar = { 10, 10, static_cast<float>(m_health) * m_healthBarScale, 50 };
+
+	// Handles if player is in stun state
+	HandleStun();
+}
+
+void Player::HandleStun()
+{
+	if (m_isStunned && m_stunTimer > 0.01f)
+	{
+		m_stunTimer -= GetFrameTime();
+	}
+	else
+	{
+		m_stunTimer = m_stunCooldown;
+		m_isStunned = false;
+	}
 }
 
 Vector3 Player::GetVelocity() const

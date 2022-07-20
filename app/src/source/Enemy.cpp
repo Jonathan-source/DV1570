@@ -7,13 +7,15 @@
 Enemy::Enemy()
 	: Entity()
 	, m_health(100)
-	, m_attackDmg(1)
+	, m_attackDmg(5)
 	, m_runSpeed(3.f + static_cast<float>((rand() % 5) / 10.f))
 	, m_updateFreqAStar(static_cast<float>((rand() % 100 + 1) / 100.f))
 	, m_updateTimer(m_updateFreqAStar)
 	, m_velocity({0.f, 0.f, 0.f})
 	, m_direction({ 0.f, 0.f, })
-	, m_attackRange(5.f)
+	, m_attackRange(1.f)
+	, m_attackTimer(0.f)
+	, m_attackCooldown(1.f)
 {
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
@@ -24,14 +26,16 @@ Enemy::Enemy()
 Enemy::Enemy(Player* playerTarget)
 	: Entity()
 	, m_health(100)
-	, m_attackDmg(1)
+	, m_attackDmg(5)
 	, m_runSpeed(5)
 	, m_updateFreqAStar(static_cast<float>((rand() % 100 + 1) / 100.f))
 	, m_updateTimer(m_updateFreqAStar)
 	, m_velocity({ 0.f, 0.f, 0.f })
 	, m_direction({ 0.f, 0.f, })
 	, m_playerTarget(playerTarget)
-	, m_attackRange(5.f)
+	, m_attackRange(1.f)
+	, m_attackTimer(0.f)
+	, m_attackCooldown(1.f)
 {
 	SetModel(LoadModel("../resources/meshes/zombie.obj"));
 	this->m_texture = LoadTexture("../resources/textures/zombie.png");
@@ -149,8 +153,19 @@ void Enemy::Update()
 	// Generate path and move
 	MoveOnPath();
 
-	// Attack player
-	//if(m_playerTarget->GetPosition())
+	AttackPlayer();
+
+	m_attackTimer -= GetFrameTime();
+}
+
+void Enemy::AttackPlayer()
+{
+	if (Vector3Distance(m_playerTarget->GetPosition(), this->GetPosition()) < m_attackRange && m_attackTimer < 0.01f)
+	{
+		m_playerTarget->TakeDamage(m_attackDmg);
+		m_playerTarget->SetVelocity({ this->GetDirection().x * 2, 0.0f, this->GetDirection().y * 2 });
+		m_attackTimer = m_attackCooldown;
+	}
 }
 
 void Enemy::TakeDamage(int damage)
