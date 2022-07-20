@@ -1,18 +1,44 @@
 #include "pch.h"
 #include "Editor.h"
 #include "ResourceManager.h"
+#include "LevelManager.h"
 
-// Temporary colors.
-Color colors[10] = {
-	YELLOW, ORANGE, PINK, RED, GREEN, BLUE,
-	PURPLE, BROWN, GRAY, BLACK
-};
+#define CAMERASPEED 5.f;
+#define GRID_X 50
+#define GRID_Y 50
 
 Editor::Editor()
 	: m_cameraVelocity({ 0.f,0.f,0.f })
+	, m_cameraSpeedModifier(1.f)
 	, m_saveMessageCounter(0)
 	, m_showSaveMessage(false)
 {
+	m_items.push_back({
+		ResourceManager::Get().GetTexture("tree_1_icon.png"),
+		"tree_1.obj" }
+	);
+
+	m_items.push_back({
+		ResourceManager::Get().GetTexture("tree_2_icon.png"),
+		"tree_2.obj" }
+	);
+
+	m_items.push_back({
+		ResourceManager::Get().GetTexture("rock_1_icon.png"),
+		"rock_1.obj" }
+	);
+
+	m_items.push_back({
+		ResourceManager::Get().GetTexture("spawner_1_icon.png"),
+		"cube.obj" }
+	);
+
+	m_items.push_back({
+		ResourceManager::Get().GetTexture("zombie_1_icon.png"),
+		"zombie.obj" }
+	);
+
+	LoadLevel();
 }
 
 void Editor::OnEnter()
@@ -22,8 +48,7 @@ void Editor::OnEnter()
 	m_camera.up = { 0.0f, 1.0f, 0.0f };	
 	m_camera.fovy = 45.0f;  
 	m_camera.projection = CAMERA_PERSPECTIVE;
-
-	GenerateGrid();
+	
 	SetupPanel();
 }
 
@@ -59,8 +84,8 @@ void Editor::OnRender()
 	
 	BeginMode3D(m_camera);
 
-	DrawGrid(50, 1.0f);
 	DrawTileGrid();
+
 	DrawObjects();
 
 	EndMode3D();
@@ -77,13 +102,14 @@ void Editor::OnExit()
 
 void Editor::UpdateCamera(float frameDelta)
 {
-	const float velocity = frameDelta * m_cameraSpeed * m_cameraSpeedModifier;
+	const float velocity = frameDelta * m_cameraSpeedModifier * CAMERASPEED;
 	m_camera.position = Vector3Add(Vector3Scale(m_cameraVelocity, velocity), m_camera.position);
 	m_camera.target = Vector3Add(Vector3Scale(m_cameraVelocity, velocity), m_camera.target);
 }
 
 void Editor::HandleCameraInput()
 {
+	// Movement directions
 	if (IsKeyDown(KEY_A))
 		m_cameraVelocity.x = -1.0f;
 
@@ -102,31 +128,11 @@ void Editor::HandleCameraInput()
 	if (!IsKeyDown(KEY_W) && !IsKeyDown(KEY_S))
 		m_cameraVelocity.z = 0;
 
+	// Increase speed
 	if (IsKeyDown(KEY_LEFT_SHIFT))
 		m_cameraSpeedModifier = 3.f;
 	else 
 		m_cameraSpeedModifier = 1.f;
-}
-
-void Editor::HandleMouseInput()
-{
-	// Mouse position in world space.
-	Vector3 N = { 0.f, 1.f, 0.f };
-	float t = (-Vector3DotProduct(m_cameraRay.position, N)) / (Vector3DotProduct(m_cameraRay.direction, N));
-	Vector3 mousePosition = Vector3Add(m_cameraRay.position, Vector3Scale(m_cameraRay.direction, t));
-
-	m_currentTile.x = mousePosition.x;
-	m_currentTile.y = mousePosition.y;
-}
-
-void Editor::ZoomIn()
-{
-
-}
-
-void Editor::ZoomOut()
-{
-
 }
 
 void Editor::UpdateSaveMsgTimer(float frameDelta)
@@ -146,51 +152,23 @@ void Editor::DrawObjects()
 {
 	for (const auto& obj : m_objects)
 	{
-		DrawModel(obj.model, obj.position, 1.f, WHITE);
-	}
-}
-
-void Editor::DrawTileGrid()
-{
-	Rectangle rect;
-	rect.width = 10.f;
-	rect.height = 10.f;
-		
-	for (int i = 0; i < NUM_TILES; i++)
-	{
-		DrawRectangle(m_tiles[i].position.x,
-			m_tiles[i].position.y,
-			rect.width,
-			rect.height,
-			colors[3]);
-	}
-}
-
-void Editor::GenerateGrid()
-{
-	float offset = -25.f;
-	for (int y = 0; y < GRID_Y; ++y)
-	{
-		for (int x = 0; x < GRID_X; ++x)
-		{
-			int index = y * GRID_X + x;
-			m_tiles[index].id = index;
-			m_tiles[index].position = Vector3{ offset + x, offset + y, 0.f };
-		}
+		DrawModel(ResourceManager::Get().GetModel(obj.modelName),
+			obj.position, 1.f, WHITE);
+		//DrawBoundingBox(obj.boundingBox, RED);
 	}
 }
 
 void Editor::SetupPanel()
 {
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < m_items.size(); i++)
 	{
-		m_itemRects[i].x = 20 + 60.0f * i + 4 * i;
+		m_itemRects[i].x = 20 + 64.0f * i + 4 * i;
 		m_itemRects[i].y = 20;
-		m_itemRects[i].width = 60;
-		m_itemRects[i].height = 60;
+		m_itemRects[i].width = 64;
+		m_itemRects[i].height = 64;
 	}
 
-	m_btnNewRec = { GetScreenWidth() / 1.5f - 10, 20, 80, 60 };
+	m_btnClearRec = { GetScreenWidth() / 1.5f - 10, 20, 85, 60 };
 	m_btnSaveRec = { GetScreenWidth() / 1.2f - 10, 20, 85, 60 };
 }
 
@@ -203,7 +181,7 @@ void Editor::HandleItemSelectionInput()
 
 	m_isMouseOnPanel = false;
 	m_btnSaveMouseHover = false;
-	m_btnNewMouseHover = false;
+	m_btnClearMouseHover = false;
 
 	// Check if mouse hover panel
 	if (mousePos.y <= 100.f)
@@ -235,16 +213,25 @@ void Editor::HandleItemSelectionInput()
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 			{
 				m_showSaveMessage = true;
+
+				if (m_objects.empty())
+				{
+					std::filesystem::remove("level.eff");
+				}
+				else
+				{
+					SaveLevel();
+				}
 			}
 		}
 
-		// Check mouse hover save button
-		if (CheckCollisionPointRec(mousePos, m_btnNewRec))
+		// Check mouse hover clear button
+		if (CheckCollisionPointRec(mousePos, m_btnClearRec))
 		{
-			m_btnNewMouseHover = true;
+			m_btnClearMouseHover = true;
 			if (IsMouseButtonReleased(MOUSE_BUTTON_LEFT))
 			{
-				m_objects.clear();
+				m_objects.clear();	
 			}
 		}
 	}
@@ -253,15 +240,16 @@ void Editor::HandleItemSelectionInput()
 void Editor::DrawPanel()
 {
 	// Draw top panel
-	DrawRectangle(0, 0, GetScreenWidth(), 100, RAYWHITE);
+	DrawRectangle(0, 0, GetScreenWidth(), 100, DARKGRAY);
 	DrawLine(0, 100, GetScreenWidth(), 100, LIGHTGRAY);
 
 	// Draw item selection rectangles
-	for (int i = 0; i < 10; i++) 
-		DrawRectangleRec(m_itemRects[i], colors[i]);
+	auto& rm = ResourceManager::Get();
 
-	DrawRectangleLines(20, 20, 60, 60, LIGHTGRAY);
-	
+	for (int i = 0; i < m_items.size(); i++) {
+		DrawTexture(m_items[i].texture, (int)m_itemRects[i].x, (int)m_itemRects[i].y, WHITE);
+	}
+
 	// Draw faded rectangle on item hover
 	if (m_itemMouseHover >= 0) 
 		DrawRectangleRec(m_itemRects[m_itemMouseHover], Fade(WHITE, 0.6f));
@@ -269,24 +257,67 @@ void Editor::DrawPanel()
 	// Draw rectangle boarder around current selected item
 	Rectangle rect = { m_itemRects[m_itemSelected].x - 4, m_itemRects[m_itemSelected].y - 4,
 		m_itemRects[m_itemSelected].width + 8, m_itemRects[m_itemSelected].height + 8 };
-	DrawRectangleLinesEx(rect, 2, BLACK);
+	DrawRectangleLinesEx(rect, 2, RED);
 
-	// Drawn new button
-	DrawRectangleLinesEx(m_btnNewRec, 2, m_btnNewMouseHover ? RED : BLACK);
-	DrawText(" NEW!", GetScreenWidth() / 1.5f, 40, 20, m_btnNewMouseHover ? RED : BLACK);
+	// Drawn clear button
+	DrawRectangleLinesEx(m_btnClearRec, 2, m_btnClearMouseHover ? RED : BLACK);
+	DrawText("CLEAR", GetScreenWidth() / 1.5f, 40, 20, m_btnClearMouseHover ? RED : BLACK);
 
 	// Draw save button
 	DrawRectangleLinesEx(m_btnSaveRec, 2, m_btnSaveMouseHover ? RED : BLACK);
-	DrawText(" SAVE!", GetScreenWidth() / 1.2f, 40, 20, m_btnSaveMouseHover ? RED : BLACK);
+	DrawText("SAVE!", GetScreenWidth() / 1.2f, 40, 20, m_btnSaveMouseHover ? RED : BLACK);
 
 	// Draw save image message
 	if (m_showSaveMessage)
 	{
 		DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(RAYWHITE, 0.8f));
 		DrawRectangle(0, 150, GetScreenWidth(), 80, BLACK);
-		std::string name = "name-of-the-map";
-		std::string text = "LEVEL SAVED: " + name;
+		std::string name = "default_level";
+		std::string text = "LEVEL SAVED: '" + name + "'";
 		DrawText(text.c_str(), GetScreenWidth() / 3, 180, 20, RAYWHITE);
+	}
+}
+
+void Editor::DrawTileGrid()
+{
+
+}
+
+void Editor::SaveLevel()
+{
+	std::fstream writer;
+	writer.open("level.eff", std::ios::out | std::ios::binary);
+	if (writer.is_open())
+	{
+		size_t num_elements = m_objects.size();
+		writer.write(reinterpret_cast<char*>(&num_elements), sizeof(size_t));
+		writer.write(reinterpret_cast<char*>(&m_objects[0]), num_elements * sizeof(SceneObject));
+		writer.close();
+	}
+	else
+	{
+		std::cout << "\nAn error occured when writing data to file.\n\n";
+		writer.clear();
+	}
+}
+
+void Editor::LoadLevel()
+{
+	std::fstream reader;
+	reader.open("level.eff", std::ios::in | std::ios::binary);
+	if (reader.is_open())
+	{
+		size_t num_elements = 0;
+		reader.read(reinterpret_cast<char*>(&num_elements), sizeof(size_t));
+		m_objects.clear();
+		m_objects.resize(num_elements);
+		reader.read(reinterpret_cast<char*>(&m_objects[0]), num_elements * sizeof(SceneObject));
+		reader.close();
+	}
+	else
+	{
+		std::cout << "\nAn error occured when reading data from file.\n\n";
+		reader.clear();
 	}
 }
 
@@ -317,16 +348,46 @@ void Editor::HandleItemPlacementInput()
 
 		if (!collision.hit)
 		{
-			collision = GetRayCollisionQuad(ray, { -25, 0, 25 }, { 25, 0, 25 }, { 25, 0, -25 }, { -25, 0, -25 });
-			static Model model = ResourceManager::Get().GetModel("rock_1.obj");
-			m_objects.push_back(
-				{
-					Vector3 { collision.point },
-					model,
-					colors[m_itemSelected],
-					GetMeshBoundingBox(model.meshes[0])
-				});
-			TraceLog(TraceLogLevel::LOG_DEBUG, "Object created!");
+			collision = GetRayCollisionQuad(ray, { 0, 0, 50 }, { 50, 0, 50 }, { 50, 0, -50 }, { 0, 0, -50 });
+			std::string modelName = m_items[m_itemSelected].modelName;
+			Model model = ResourceManager::Get().GetModel(modelName);
+
+			Vector3 position = collision.point;
+			position.x = floorf(position.x) + 0.5f;
+			position.z = floorf(position.z) + 0.5f;
+	
+			SceneObject object;
+			object.position = position;
+			object.boundingBox = GetMeshBoundingBox(model.meshes[0]);
+			strcpy_s(object.modelName, modelName.c_str());
+			m_objects.emplace_back(object);
+		}
+	}
+
+	if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
+	{
+		Ray ray = GetMouseRay(GetMousePosition(), m_camera);
+		RayCollision collision = { 0 };
+		for (int i = 0; i < m_objects.size() && !collision.hit; ++i)
+		{
+			Vector3 position = m_objects[i].position;
+			BoundingBox boundingBox = m_objects[i].boundingBox;
+
+			collision = GetRayCollisionBox(ray, BoundingBox{ Vector3{
+					position.x + boundingBox.min.x,
+					position.y + boundingBox.min.y,
+					position.z + boundingBox.min.z,
+			},Vector3{
+					position.x + boundingBox.max.x,
+					position.y + boundingBox.max.y,
+					position.z + boundingBox.max.z,
+				}
+			});
+
+			if (collision.hit)
+			{
+				m_objects.erase(m_objects.begin() + i);
+			}
 		}
 	}
 }

@@ -41,7 +41,3 @@ Sound& ResourceManager::GetSound(const std::string& name)
     }
     return it->second;
 }
-
-ResourceManager::~ResourceManager()
-{
-}

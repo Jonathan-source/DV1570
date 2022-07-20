@@ -11,6 +11,7 @@ public:
 	virtual ~LevelManager() = default;
 
 	void LoadLevel();
+
 	void SaveLevel();
 
 private:

@@ -10,7 +10,7 @@
 class Game : public IState
 {
 public:
-	Game() = default;
+	Game(lua_State* L);
 	virtual ~Game();
 
 	void OnEnter() override;
@@ -23,6 +23,7 @@ public:
 	void InitCamera();
 
 private:
+	lua_State* L;
 	Camera m_camera;
 	Player m_player;
 	Enemy m_enemy;

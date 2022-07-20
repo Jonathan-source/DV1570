@@ -3,6 +3,8 @@
 
 #include "BulletHandler.h"
 
+#include "ResourceManager.h"
+
 Player::Player()
 	: Entity()
 	, m_health(100)
@@ -17,8 +19,8 @@ Player::Player()
 	, m_healthBarScale(3.0f)
 
 {
-	SetModel(LoadModel("../resources/meshes/steve.obj"));
-	this->m_texture = LoadTexture("../resources/textures/Steve.png");
+	SetModel(ResourceManager::Get().GetModel("steve.obj"));
+	this->m_texture = ResourceManager::Get().GetTexture("steve.png");
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
 	m_model.transform = MatrixRotateXYZ({ 0, DEG2RAD * 90, 0 });
 }

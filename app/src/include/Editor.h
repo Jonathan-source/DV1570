@@ -20,38 +20,28 @@ public:
 
 
 private:
+	// Camera settings
 	Camera m_camera;
 	Ray m_cameraRay;
 	Vector3 m_cameraVelocity;
-	const float m_cameraSpeed = 5.f;
-	float m_cameraSpeedModifier = 1.0f;
+	float m_cameraSpeedModifier;
 
-	struct Object 
-	{
+	struct SceneObject {
 		Vector3 position;
-		Model model;
-		Color color;
 		BoundingBox boundingBox;
+		char modelName[20];
 	};
 
-	std::vector<Object> m_objects;
-	
-	struct Tiles {
+	struct PanelItem {
 		Texture texture;
-		Vector3 position;
-		unsigned int id;
-		bool isOccupied;
+		std::string modelName;
 	};
 
-	const int GRID_X = 50;
-	const int GRID_Y = 50;
-	static const int NUM_TILES = 2500; // GRID_X * GRID_Y
-	std::array<Tiles, NUM_TILES> m_tiles;
-
-	Rectangle m_currentTile;
+	std::vector<SceneObject> m_objects;
+	std::vector<PanelItem> m_items;
 
 	Rectangle m_itemRects[10];
-	int m_itemSelected ;
+	int m_itemSelected;
 	int m_itemSelectedPrev;
 	int m_itemMouseHover;
 	bool m_mouseWasPressed;
@@ -62,20 +52,19 @@ private:
 	bool m_showSaveMessage;
 	int m_saveMessageCounter;
 
-	Rectangle m_btnNewRec;
-	bool m_btnNewMouseHover;
+	Rectangle m_btnClearRec;
+	bool m_btnClearMouseHover;
 
 	void UpdateCamera(float frameDelta);
 	void UpdateSaveMsgTimer(float frameDelta);
 	void HandleCameraInput();
-	void HandleMouseInput();
-	void ZoomIn();
-	void ZoomOut();
 	void DrawObjects();
-	void DrawTileGrid();
-	void GenerateGrid();
 	void SetupPanel();
 	void HandleItemSelectionInput();
 	void HandleItemPlacementInput();
 	void DrawPanel();
+	void DrawTileGrid();
+
+	void SaveLevel();
+	void LoadLevel();
 };

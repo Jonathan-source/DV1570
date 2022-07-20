@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "MainMenu.h"
+#include "ResourceManager.h"
 
 MainMenu::MainMenu()
 	: m_Numframes(3)
@@ -120,20 +121,17 @@ void MainMenu::OnRender()
 
 void MainMenu::OnExit()
 {
-	UnloadTexture(t_startButton);
-	UnloadTexture(t_editorButton);
-	UnloadTexture(t_highscoreButton);
-	UnloadTexture(t_exitButton);
+
 }
 
 void MainMenu::InitButtons()
 {
 
 	fxButton = LoadSound("../resources/sounds/buttonfx.wav");
-	t_startButton = LoadTexture("../resources/textures/startbutton.png");
-	t_editorButton = LoadTexture("../resources/textures/editorbutton.png");
-	t_highscoreButton = LoadTexture("../resources/textures/highscorebutton.png");
-	t_exitButton = LoadTexture("../resources/textures/exitbutton.png");
+	t_startButton =		ResourceManager::Get().GetTexture("startbutton.png");
+	t_editorButton =	ResourceManager::Get().GetTexture("editorbutton.png");
+	t_highscoreButton = ResourceManager::Get().GetTexture("highscorebutton.png");
+	t_exitButton =		ResourceManager::Get().GetTexture("exitbutton.png");
 
 	frameHeight = static_cast<float>(t_startButton.height) / static_cast<float>(m_Numframes);
 

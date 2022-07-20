@@ -11,7 +11,9 @@ int main()
     luaL_openlibs(L);
 
     Application* app = new Application(L);
+    
     app->Run();
+    
     delete app;
 
     lua_close(L);

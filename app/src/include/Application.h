@@ -12,7 +12,7 @@ class Application
 {
 public:
     Application(lua_State* L);
-    virtual ~Application();
+    virtual ~Application() = default;
 
     void Run();
     

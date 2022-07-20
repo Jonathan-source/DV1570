@@ -21,6 +21,7 @@ extern "C"
 #include <string>
 #include <string_view>
 #include <exception>
+#include <filesystem>
 #include <chrono>
 #include <iostream>
 #include <sstream>
@@ -33,6 +34,7 @@ extern "C"
 #include <unordered_map>
 #include <vector>
 #include <array>
+#include <iterator>
 #include <set>
 #include <queue>
 #include <condition_variable>

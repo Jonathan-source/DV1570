@@ -4,13 +4,19 @@
 #include "CollisionHandler.h"
 
 
+Game::Game(lua_State* L)
+	: L(L)
+	, m_enemyManager(nullptr)
+{
+}
+
 Game::~Game()
 {
 	for (const auto& nodeVec : m_grid)
 	{
 		for (auto node : nodeVec)
 		{
-			delete node;
+			if(node) delete node;
 		}
 	}
 
@@ -119,7 +125,7 @@ void Game::OnRender()
 	m_enemyManager->RenderEnemies();
 	RenderGrid();
 	DrawCubeWires({ 0,0,0 }, 2.0f, 2.0f, 2.0f, MAROON);
-	DrawGrid(10, 1.0f);
+	DrawGrid(50, 1.0f);
 	EndMode3D();
 	DrawRectangleRec(m_player.GetHealthBar(), Fade(RED, 0.5f));
 	EndDrawing();
@@ -150,7 +156,7 @@ void Game::InitCamera()
 	m_camera.position = { 0.0f, 10.0f, 10.0f };  // Camera position
 	m_camera.target = { 0.0f, 0.0f, 0.0f };      // Camera looking at point
 	m_camera.up = { 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-	//m_camera.fovy = 45.0f;                                // Camera field-of-view Y
+	m_camera.fovy = 45.0f;                                // Camera field-of-view Y
 	m_camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
 
 	lua_close(L);
