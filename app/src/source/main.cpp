@@ -7,7 +7,7 @@ int main(int argc, char * argv[])
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-    std::filesystem::path pathToShow{ argc >= 2 ? argv[1] : std::filesystem::current_path() };
+    std::filesystem::path pathToShow{ std::filesystem::current_path() };
     std::filesystem::path projectPath;
     for (const auto& part : pathToShow) {
         projectPath /= part;
@@ -19,7 +19,6 @@ int main(int argc, char * argv[])
 
     Application* app = new Application(L, projectPath.string());
 
-    // initialize application
     if (app->Initialize()) {
         app->Run();
     }
