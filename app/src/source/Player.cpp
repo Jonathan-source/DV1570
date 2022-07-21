@@ -45,7 +45,7 @@ Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	// Tranformation matrix for rotations
 	m_model.transform = MatrixRotateXYZ( { 0, DEG2RAD * 90, 0 });
-	this->m_texture = LoadTexture("../resources/textures/Steve.png");
+	this->m_texture = LoadTexture("../resources/textures/steve.png");
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
 }
 

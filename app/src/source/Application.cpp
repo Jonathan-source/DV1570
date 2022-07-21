@@ -12,13 +12,24 @@ Application::Application(lua_State* L, const std::string& projectPath)
 
 void Application::Run()
 {    
+    CheckLua(L, luaL_dofile(L, (m_projectPath + "/resources/scripts/demo.lua").c_str()));
+
     IState* currentState = nullptr;
     while (!WindowShouldClose() && m_isRunning)
     {
-        currentState = m_sceneStateMachine.Current();
-        
-        // Update Lua?
+        lua_getglobal(L, "onUpdate");
+        if (lua_isfunction(L, -1))
+        {
+            if (!CheckLua(L, lua_pcall(L, 0, 0, 0)))
+            {
+                std::cout << "failed" << std::endl;
+            }
+        }
+        else
+            lua_pop(L, 1);
 
+        currentState = m_sceneStateMachine.Current();
+       
         currentState->OnInput();
 
         m_isRunning = currentState->OnUpdate(GetFrameTime());
@@ -45,13 +56,20 @@ bool Application::Initialize()
 
     InitAudioDevice();
 
+    RegisterLuaFunctions();
+
     LoadResources();
 
     SetupGameScenes();
 
-    m_isRunning = LoadGameScript();
+    m_isRunning = true;
 
     return m_isRunning;
+}
+
+void Application::RegisterLuaFunctions()
+{
+    lua_register(L, "_IsKeyDown", wrap_IsKeyDown);
 }
 
 void Application::LoadResources()
@@ -77,8 +95,6 @@ void Application::LoadResources()
     recourceManager.GetTexture("editorbutton.png");
     recourceManager.GetTexture("highscorebutton.png");
     recourceManager.GetTexture("exitbutton.png");
-
-
 }
 
 void Application::SetupGameScenes()
@@ -92,37 +108,13 @@ void Application::SetupGameScenes()
     m_sceneStateMachine.Change("MainMenu");
 }
 
-bool Application::LoadGameScript()
+int Application::wrap_IsKeyDown(lua_State* L)
 {
-    luaL_dofile(L, (m_projectPath + "/resources/scripts/demo.lua").c_str());
-
-    if (!lua_getglobal(L, "onEvent") || !lua_isfunction(L, -1))
-    {
-        std::cout << "\n'onEvent' function not found\n" << std::endl;
-        return false;
-    }
-    lua_pop(L, -1);
-
-    if (!lua_getglobal(L, "onUpdate") || !lua_isfunction(L, -1))
-    {
-        std::cout << "\n'onUpdate' function not found\n" << std::endl;
-        return false;
-    }
-    lua_pop(L, -1);
-
-    if (!lua_getglobal(L, "onRender") || !lua_isfunction(L, -1))
-    {
-        std::cout << "\n'onRender' function not found\n" << std::endl;
-        return false;
-    }
-    lua_pop(L, -1);
-
-    if (!lua_getglobal(L, "onInit") || !lua_isfunction(L, -1))
-    {
-        std::cout << "\n'onInit' function not found\n" << std::endl;
-        return false;
-    }
-
-    // Call 'onInit' function.
-    return CheckLua(L, lua_pcall(L, 0, 0, 0));
+    if (lua_gettop(L) != 1) return -1;
+    int key = (int)lua_tointeger(L, 1);
+    bool isDown = IsKeyDown((KeyboardKey)key);
+    lua_pushboolean(L, isDown);
+    return 1;
 }
+
+

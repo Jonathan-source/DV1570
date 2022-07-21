@@ -25,7 +25,12 @@ private:
     StateMachine m_sceneStateMachine;
     bool m_isRunning;
 
+    void RegisterLuaFunctions();
     void LoadResources();
     void SetupGameScenes();
-    bool LoadGameScript();
+
+    // LuaFunctions
+
+    // LuaWrappers
+    static int wrap_IsKeyDown(lua_State * L);
 };

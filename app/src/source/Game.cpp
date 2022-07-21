@@ -138,28 +138,12 @@ void Game::OnExit()
 
 void Game::InitCamera()
 {
-	lua_State* L = luaL_newstate();
-	luaL_openlibs(L);
-
-	luaL_dofile(L, "../resources/scripts/GameConfig.lua");
-	lua_getglobal(L, "Camera");
-
-	if(lua_istable(L, -1))
-	{
-		lua_pushstring(L, "Fov");
-		lua_gettable(L, -2);
-		m_camera.fovy = lua_tonumber(L, -1);
-		lua_pop(L, 1);
-	}
-
 	// Define the camera to look into our 3d world
-	m_camera.position = { 0.0f, 10.0f, 10.0f };  // Camera position
-	m_camera.target = { 0.0f, 0.0f, 0.0f };      // Camera looking at point
-	m_camera.up = { 0.0f, 1.0f, 0.0f };          // Camera up vector (rotation towards target)
-	m_camera.fovy = 45.0f;                                // Camera field-of-view Y
-	m_camera.projection = CAMERA_PERSPECTIVE;             // Camera mode type
-
-	lua_close(L);
+	m_camera.position = { 0.0f, 10.0f, 10.0f };				// Camera position
+	m_camera.target = { 0.0f, 0.0f, 0.0f };					// Camera looking at point
+	m_camera.up = { 0.0f, 1.0f, 0.0f };						// Camera up vector (rotation towards target)
+	m_camera.fovy = 45.0f;									// Camera field-of-view Y
+	m_camera.projection = CAMERA_PERSPECTIVE;				// Camera mode type
 }
 
 

@@ -6,7 +6,7 @@ bool CheckLua(lua_State * L, int err)
     if (err != LUA_OK)
     {
         std::string message = lua_tostring(L, -1);
-        std::cout << message.c_str() << std::endl;
+        std::cout << '\n' << message.c_str() << std::endl;
         return false;
     }
 
