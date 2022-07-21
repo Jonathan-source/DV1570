@@ -6,10 +6,8 @@ Application::Application(lua_State* L, const std::string& projectPath)
     : L(L)
     , m_projectPath(projectPath)
     , m_sceneStateMachine(StateMachine())
+    , m_isRunning(false)
 {
-    SetupEngine();
-    LoadResources();
-    SetupGameScenes();
 }
 
 void Application::Run()
@@ -34,18 +32,26 @@ void Application::Run()
     CloseAudioDevice();
 }
 
-void Application::SetupEngine()
+bool Application::Initialize()
 {
     const int screenWidth = 1280;
     const int screenHeight = 800;
-    m_isRunning = true;
 
     InitWindow(screenWidth, screenHeight, "The Game");
+
+    SetTargetFPS(60);
+
     SetExitKey(KEY_NULL);
 
     InitAudioDevice();
 
-    SetTargetFPS(60);
+    LoadResources();
+
+    SetupGameScenes();
+
+    m_isRunning = LoadGameScript();
+
+    return m_isRunning;
 }
 
 void Application::LoadResources()
@@ -84,4 +90,39 @@ void Application::SetupGameScenes()
 
 	// Set initial scene
     m_sceneStateMachine.Change("MainMenu");
+}
+
+bool Application::LoadGameScript()
+{
+    luaL_dofile(L, (m_projectPath + "/resources/scripts/demo.lua").c_str());
+
+    if (!lua_getglobal(L, "onEvent") || !lua_isfunction(L, -1))
+    {
+        std::cout << "\n'onEvent' function not found\n" << std::endl;
+        return false;
+    }
+    lua_pop(L, -1);
+
+    if (!lua_getglobal(L, "onUpdate") || !lua_isfunction(L, -1))
+    {
+        std::cout << "\n'onUpdate' function not found\n" << std::endl;
+        return false;
+    }
+    lua_pop(L, -1);
+
+    if (!lua_getglobal(L, "onRender") || !lua_isfunction(L, -1))
+    {
+        std::cout << "\n'onRender' function not found\n" << std::endl;
+        return false;
+    }
+    lua_pop(L, -1);
+
+    if (!lua_getglobal(L, "onInit") || !lua_isfunction(L, -1))
+    {
+        std::cout << "\n'onInit' function not found\n" << std::endl;
+        return false;
+    }
+
+    // Call 'onInit' function.
+    return CheckLua(L, lua_pcall(L, 0, 0, 0));
 }

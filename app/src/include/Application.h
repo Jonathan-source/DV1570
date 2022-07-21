@@ -7,12 +7,15 @@
 #include "Game.h"
 #include "Highscore.h"
 #include "Editor.h"
+#include "Utility.h"
 
 class Application
 {
 public:
     Application(lua_State* L, const std::string &projectPath);
     virtual ~Application() = default;
+
+    bool Initialize();
 
     void Run();
     
@@ -22,7 +25,7 @@ private:
     StateMachine m_sceneStateMachine;
     bool m_isRunning;
 
-    void SetupEngine();
     void LoadResources();
     void SetupGameScenes();
+    bool LoadGameScript();
 };

@@ -13,7 +13,7 @@ extern "C"
 #pragma comment(lib, "../libs/lua542/liblua54.a")
 #endif
 
-// RayLib.
+// RayLib
 #include <raylib.h>
 #include <raymath.h>
 
@@ -43,7 +43,3 @@ extern "C"
 #include <cmath>
 #include <functional>
 #include <math.h>
-
-
-// Macros
-#define SafeDelete(x) if(x) { delete x; x = nullptr; }

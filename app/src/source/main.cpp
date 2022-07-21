@@ -18,10 +18,15 @@ int main(int argc, char * argv[])
     luaL_openlibs(L);
 
     Application* app = new Application(L, projectPath.string());
-    
-    app->Run();
-    
+
+    // initialize application
+    if (app->Initialize()) {
+        app->Run();
+    }
+   
     delete app;
+
+    DumpStack(L);
 
     lua_close(L);
 
