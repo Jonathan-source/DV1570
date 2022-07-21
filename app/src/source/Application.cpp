@@ -2,8 +2,9 @@
 #include "Application.h"
 #include "ResourceManager.h"
 
-Application::Application(lua_State* L)
+Application::Application(lua_State* L, const std::string& projectPath)
     : L(L)
+    , m_projectPath(projectPath)
     , m_sceneStateMachine(StateMachine())
 {
     SetupEngine();
@@ -50,7 +51,7 @@ void Application::SetupEngine()
 void Application::LoadResources()
 {
     auto& recourceManager = ResourceManager::Get();
-    recourceManager.SetResourcePath("../resources");
+    recourceManager.SetResourcePath(m_projectPath + "\\resources");
 
     recourceManager.GetModel("zombie.obj");
     recourceManager.GetModel("rock_1.obj");

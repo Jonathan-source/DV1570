@@ -4,8 +4,8 @@
 #include "LevelManager.h"
 
 #define CAMERASPEED 5.f;
-#define GRID_X 50
-#define GRID_Y 50
+#define LEVEL_WIDTH 50
+#define LEVEL_HEIGHT 50
 
 Editor::Editor()
 	: m_cameraVelocity({ 0.f,0.f,0.f })
@@ -84,7 +84,7 @@ void Editor::OnRender()
 	
 	BeginMode3D(m_camera);
 
-	DrawTileGrid();
+	DrawMapBoarders();
 
 	DrawObjects();
 
@@ -216,7 +216,9 @@ void Editor::HandleItemSelectionInput()
 
 				if (m_objects.empty())
 				{
-					std::filesystem::remove("level.eff");
+					if (std::filesystem::remove("level.eff")) {
+						std::cout << "'level.eff' was successfully removed." << std::endl;
+					}
 				}
 				else
 				{
@@ -272,15 +274,23 @@ void Editor::DrawPanel()
 	{
 		DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), Fade(RAYWHITE, 0.8f));
 		DrawRectangle(0, 150, GetScreenWidth(), 80, BLACK);
-		std::string name = "default_level";
-		std::string text = "LEVEL SAVED: '" + name + "'";
+		std::string levelName = "level.eff";
+		std::string text = "LEVEL SAVED: '" + levelName + "'";
 		DrawText(text.c_str(), GetScreenWidth() / 3, 180, 20, RAYWHITE);
 	}
 }
 
-void Editor::DrawTileGrid()
+void Editor::DrawMapBoarders()
 {
+	Color boarderColor = BLACK;
 
+	// Lower Left starting point
+	DrawLine3D({ 0.f, 0.f, LEVEL_HEIGHT }, { 0.f, 0.f, -LEVEL_HEIGHT }, boarderColor); // Up
+	DrawLine3D({ 0.f, 0.f, LEVEL_HEIGHT }, { LEVEL_WIDTH, 0.f, LEVEL_HEIGHT }, boarderColor); // Right
+
+	// Upper Right starting point
+	DrawLine3D({ LEVEL_WIDTH, 0.f, -LEVEL_HEIGHT }, { LEVEL_WIDTH, 0.f, LEVEL_HEIGHT }, boarderColor); // Down
+	DrawLine3D({ LEVEL_WIDTH, 0.f, -LEVEL_HEIGHT }, { 0.f, 0.f, -LEVEL_HEIGHT }, boarderColor); // Left
 }
 
 void Editor::SaveLevel()

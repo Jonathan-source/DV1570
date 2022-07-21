@@ -63,7 +63,7 @@ private:
 	void HandleItemSelectionInput();
 	void HandleItemPlacementInput();
 	void DrawPanel();
-	void DrawTileGrid();
+	void DrawMapBoarders();
 
 	void SaveLevel();
 	void LoadLevel();
