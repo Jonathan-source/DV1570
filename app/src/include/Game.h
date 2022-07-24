@@ -10,7 +10,7 @@
 class Game : public IState
 {
 public:
-	Game(lua_State* L);
+	Game();
 	virtual ~Game();
 
 	void OnEnter() override;
@@ -30,4 +30,6 @@ private:
 	EnemyManager* m_enemyManager;
 	BulletHandler m_bulletHandler;
 	std::vector<std::vector<Node*>> m_grid;
+
+	void RegisterLuaFunctions();
 };

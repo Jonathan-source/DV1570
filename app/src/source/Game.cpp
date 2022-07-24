@@ -1,13 +1,15 @@
 #include "pch.h"
 #include "Game.h"
-
+#include "Utility.h"
 #include "CollisionHandler.h"
 
 
-Game::Game(lua_State* L)
-	: L(L)
-	, m_enemyManager(nullptr)
+Game::Game()
+	: m_enemyManager(nullptr)
 {
+	L = luaL_newstate();
+	luaL_openlibs(L);
+	RegisterLuaFunctions();
 }
 
 Game::~Game()
@@ -21,6 +23,9 @@ Game::~Game()
 	}
 
 	delete m_enemyManager;
+
+	DumpStack(L);
+	lua_close(L);
 }
 
 void Game::OnEnter()
@@ -63,9 +68,6 @@ void Game::OnInput()
 
 void Game::UpdateCamera()
 {
-	lua_State* L = luaL_newstate();
-	luaL_openlibs(L);
-
 	luaL_dofile(L, "../resources/scripts/GameConfig.lua");
 	lua_getglobal(L, "Camera");
 
@@ -76,8 +78,6 @@ void Game::UpdateCamera()
 		m_camera.fovy = lua_tonumber(L, -1);
 		lua_pop(L, 1);
 	}
-
-	lua_close(L);
 
 	m_camera.position = Vector3Add(m_player.GetPosition(), {0,10,-5});
 	m_camera.target = m_player.GetPosition();
@@ -144,6 +144,11 @@ void Game::InitCamera()
 	m_camera.up = { 0.0f, 1.0f, 0.0f };						// Camera up vector (rotation towards target)
 	m_camera.fovy = 45.0f;									// Camera field-of-view Y
 	m_camera.projection = CAMERA_PERSPECTIVE;				// Camera mode type
+}
+
+void Game::RegisterLuaFunctions()
+{
+
 }
 
 

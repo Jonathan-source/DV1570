@@ -13,21 +13,15 @@ int main(int argc, char * argv[])
         projectPath /= part;
         if (part == "DV1570") break;
     }
+    Utils::Get().SetProjectPath(projectPath.string());
 
-    lua_State* L = luaL_newstate();
-    luaL_openlibs(L);
-
-    Application* app = new Application(L, projectPath.string());
+    Application* app = new Application();
 
     if (app->Initialize()) {
         app->Run();
     }
    
     delete app;
-
-    DumpStack(L);
-
-    lua_close(L);
 
     return 0;
 }

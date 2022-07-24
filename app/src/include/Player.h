@@ -7,6 +7,7 @@ class Player : public Entity
 {
 public:
 	Player();
+	virtual ~Player();
 	Player(int health, int attdmg, float runSpeed, Vector3 position);
 	Player(const Player& other) = default; // copy constructor
 	Player(Player&& other) noexcept = default; // move constructor
@@ -40,8 +41,11 @@ public:
 
 	void HandleStun();
 
+	// LuaWrappers
+	static int wrap_SetVelocity(lua_State* L);
 
 private:
+	lua_State *L;
 	int m_health;
 	int m_attackDmg;
 	float m_runSpeed;
@@ -59,4 +63,6 @@ private:
 	Rectangle m_healthBar;
 	float m_healthBarScale;
 	void RotateWithMouse(const Ray& ray);
+
+	void RegisterLuaFunctions();
 };

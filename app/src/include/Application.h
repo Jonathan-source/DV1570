@@ -12,16 +12,15 @@
 class Application
 {
 public:
-    Application(lua_State* L, const std::string &projectPath);
-    virtual ~Application() = default;
+    Application();
+    virtual ~Application();
 
     bool Initialize();
 
     void Run();
     
 private:
-    lua_State * L;
-    std::string m_projectPath;
+    lua_State* L;
     StateMachine m_sceneStateMachine;
     bool m_isRunning;
 

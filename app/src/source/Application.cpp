@@ -2,32 +2,25 @@
 #include "Application.h"
 #include "ResourceManager.h"
 
-Application::Application(lua_State* L, const std::string& projectPath)
-    : L(L)
-    , m_projectPath(projectPath)
-    , m_sceneStateMachine(StateMachine())
+Application::Application()
+    : m_sceneStateMachine(StateMachine())
     , m_isRunning(false)
 {
+    L = luaL_newstate();
+    luaL_openlibs(L);
+}
+
+Application::~Application()
+{
+    DumpStack(L);
+    lua_close(L);
 }
 
 void Application::Run()
 {    
-    CheckLua(L, luaL_dofile(L, (m_projectPath + "/resources/scripts/demo.lua").c_str()));
-
     IState* currentState = nullptr;
     while (!WindowShouldClose() && m_isRunning)
     {
-        lua_getglobal(L, "onUpdate");
-        if (lua_isfunction(L, -1))
-        {
-            if (!CheckLua(L, lua_pcall(L, 0, 0, 0)))
-            {
-                std::cout << "failed" << std::endl;
-            }
-        }
-        else
-            lua_pop(L, 1);
-
         currentState = m_sceneStateMachine.Current();
        
         currentState->OnInput();
@@ -75,7 +68,7 @@ void Application::RegisterLuaFunctions()
 void Application::LoadResources()
 {
     auto& recourceManager = ResourceManager::Get();
-    recourceManager.SetResourcePath(m_projectPath + "\\resources");
+    recourceManager.SetResourcePath(Utils::Get().GetProjectPath() + "\\resources");
 
     recourceManager.GetModel("zombie.obj");
     recourceManager.GetModel("rock_1.obj");
@@ -100,7 +93,7 @@ void Application::LoadResources()
 void Application::SetupGameScenes()
 {
     m_sceneStateMachine.Add("MainMenu", new MainMenu());
-    m_sceneStateMachine.Add("Game", new Game(L));
+    m_sceneStateMachine.Add("Game", new Game());
     m_sceneStateMachine.Add("Highscore", new Highscore());
     m_sceneStateMachine.Add("Editor", new Editor());
 

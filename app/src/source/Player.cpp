@@ -1,9 +1,8 @@
 #include "pch.h"
 #include "Player.h"
-
 #include "BulletHandler.h"
-
 #include "ResourceManager.h"
+#include "Utility.h"
 
 Player::Player()
 	: Entity()
@@ -21,10 +20,21 @@ Player::Player()
 	, m_isStunned(false)
 
 {
+	L = luaL_newstate();
+	luaL_openlibs(L);
+	RegisterLuaFunctions();
+	CheckLua(L, luaL_dofile(L, (Utils::Get().GetProjectPath() + "/resources/scripts/Player.lua").c_str()));
+
 	SetModel(ResourceManager::Get().GetModel("steve.obj"));
 	this->m_texture = ResourceManager::Get().GetTexture("steve.png");
 	m_model.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_texture;
 	m_model.transform = MatrixRotateXYZ({ 0, DEG2RAD * 90, 0 });
+}
+
+Player::~Player()
+{
+	DumpStack(L);
+	lua_close(L);
 }
 
 Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
@@ -42,6 +52,11 @@ Player::Player(int health, int attdmg, float runSpeed, Vector3 position)
 	, m_stunCooldown(0.25f)
 	, m_isStunned(false)
 {
+	L = luaL_newstate();
+	luaL_openlibs(L);
+	RegisterLuaFunctions();
+	CheckLua(L, luaL_dofile(L, (Utils::Get().GetProjectPath() + "\\resources\\scripts\\Player.lua").c_str()));
+
 	SetModel(LoadModel("../resources/meshes/steve.obj"));
 	// Tranformation matrix for rotations
 	m_model.transform = MatrixRotateXYZ( { 0, DEG2RAD * 90, 0 });
@@ -99,23 +114,24 @@ void Player::PlayerInput(const Ray &ray)
 	if (this->m_isStunned)
 		return;
 
-	if (IsKeyDown(KEY_A))
-		m_velocity.x = 1.0f;
+	lua_getglobal(L, "PlayerMovement");
+	if (lua_isfunction(L, -1))
+	{
+		if (!CheckLua(L, lua_pcall(L, 0, 0, 0)))
+		{
+			std::cout << "failed" << std::endl;
+		}
 
-	if (IsKeyDown(KEY_W))
-		m_velocity.z = 1.0f;
+		float x = (float)lua_tonumber(L, 2);
+		float y = (float)lua_tonumber(L, 3);
+		float z = (float)lua_tonumber(L, 4);
+		m_velocity = { x, y, z };
+	}
+	else
+		lua_pop(L, 1);
 
-	if (IsKeyDown(KEY_D))
-		m_velocity.x = -1.0f;
 
-	if (IsKeyDown(KEY_S))
-		m_velocity.z = -1.0f;
 
-	if (!IsKeyDown(KEY_A) && !IsKeyDown(KEY_D))
-		m_velocity.x = 0;
-
-	if (!IsKeyDown(KEY_W) && !IsKeyDown(KEY_S))
-		m_velocity.z = 0;
 
 	RotateWithMouse(ray);
 }
@@ -161,6 +177,17 @@ void Player::HandleStun()
 		m_stunTimer = m_stunCooldown;
 		m_isStunned = false;
 	}
+}
+
+int Player::wrap_SetVelocity(lua_State* L)
+{
+	if (lua_gettop(L) != 4) return -1;
+	Player* player = (Player*)lua_touserdata(L, 1);
+	float x = (float)lua_tonumber(L, 2);
+	float y = (float)lua_tonumber(L, 3);
+	float z = (float)lua_tonumber(L, 4);
+	player->SetVelocity({x, y, z});
+	return 0;
 }
 
 Vector3 Player::GetVelocity() const
@@ -223,3 +250,9 @@ void Player::RotateWithMouse(const Ray& ray)
 	m_direction = Vector2Rotate(m_direction, DEG2RAD * -90); // i don't know why -90 degree but it works?
 	m_model.transform = MatrixRotateXYZ({ 0, m_angle, 0 });
 }
+
+void Player::RegisterLuaFunctions()
+{
+	lua_register(L, "_SetPlayerVelocity", wrap_SetVelocity);
+}
+
