@@ -5,7 +5,7 @@ BulletHandler::BulletHandler()
 {
 	m_bulletModel = LoadModel("../resources/meshes/bullet.obj");
 	m_bulletBounds = GetMeshBoundingBox(m_bulletModel.meshes[0]);
-	//m_bulletTexture = LoadTexture("../resources/textures/Steve.png");z§
+	//m_bulletTexture = LoadTexture("../resources/textures/potion.png");
 	//m_bulletModel.materials[0].maps[MATERIAL_MAP_DIFFUSE].texture = m_bulletTexture;
 }
 
